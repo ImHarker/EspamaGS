@@ -140,3 +140,7 @@ a, a:visited, a:hover, a:active {
 .remember-container input{
 transform: scale(1.5);
 }
+
+.text-danger {
+    color: #dc3545;
+}
