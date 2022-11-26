@@ -1,7 +1,60 @@
 ﻿@page
 @model LoginModel
 
+@{
+    Layout = null;
+}
 
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Login - EspamaGS</title>
+    <link rel="stylesheet" href="/css/admin.css">
+
+</head>
+<body>
+    <div class="login-card-container">
+        <form id="account" method="post">
+            <div class="login-card">
+                <div>
+                    <img class="logo" src="/img/EspamaGS.png">
+                </div>
+			    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div>
+                    <label asp-for="Input.Email">Username</label>
+                    <br />
+                        <input asp-for="Input.Email" type="text" placeholder="Enter Username">
+					<br />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Input.Password">Password</label>
+                    <br>
+                    <input asp-for="Input.Password" type="password" placeholder="Enter Password">
+                    <br>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="remember-container">
+                    <label class="remember" asp-for="Input.RememberMe"></label>
+                    <input class="form-check-input" asp-for="Input.RememberMe" />
+                </div>
+                <div>
+                    <button type="submit">Login</button>
+                </div>
+                <div class="create">
+                    Don't have an account? <a asp-area="Identity" asp-page="/Account/Register">Create an account</a>
+                </div>
+                <div class="create">
+                    Wanna go back to the shop? <a asp-area="" asp-controller="Home" asp-action="Index">Click Here</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</body>
 
 
 

@@ -1,6 +1,82 @@
 ﻿@page
 @model RegisterModel
+
 @{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Admin Panel - EspamaGS</title>
+    <link rel="stylesheet" href="/css/admin.css">
+
+</head>
+<body class="registerbody">
+    <div class="login-card-container">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div class="login-card">
+                <div>
+                    <img class="logo" src="/img/EspamaGS.png">
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div>
+                    <label asp-for="Input.Email">Username</label>
+                    <br>
+                    <input asp-for="Input.Email" type="text" placeholder="Enter Username">
+                    <br>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Input.Email">Nome</label>
+                    <br>
+                    <input asp-for="Input.Email" type="text" placeholder="Enter Name">
+                    <br>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Input.Email">Email</label>
+                    <br>
+                    <input asp-for="Input.Email" type="text" placeholder="Enter Email">
+                    <br>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Input.Password">Password</label>
+                    <br>
+                    <input asp-for="Input.Password" type="password" placeholder="Enter Password">
+                    <br>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                    <br>
+                    <input asp-for="Input.ConfirmPassword" type="password" placeholder="Enter Password">
+                    <br>
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div>
+                    <button type="submit">Register</button>
+                </div>
+                <div class="create">
+                    Already have an account? <a asp-area="Identity" asp-page="/Account/Login">Log in to your account</a>
+                </div>
+                <div class="create">
+                    Wanna go back to the shop? <a asp-area="" asp-controller="Home" asp-action="Index">Click Here</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+
+
+
+@*@{
     ViewData["Title"] = "Register";
 }
 
@@ -60,7 +136,7 @@
             }
         </section>
     </div>
-</div>
+</div>*@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

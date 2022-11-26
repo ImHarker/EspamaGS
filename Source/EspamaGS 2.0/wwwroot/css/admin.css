@@ -130,3 +130,13 @@ a, a:visited, a:hover, a:active {
     background: none;
     overflow: hidden;
 }
+.remember-container{
+    padding-bottom: 1rem;
+}
+.remember {
+    font-weight: 100 !important;
+    text-transform: none !important;
+}
+.remember-container input{
+transform: scale(1.5);
+}
