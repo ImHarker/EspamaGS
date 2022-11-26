@@ -1,0 +1,54 @@
+﻿@model Utilizador
+@{
+    ViewData["Title"] = "AddAdmins";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section AddToHead{
+	<link href="@Url.Content("~/css/admin.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="add-card-container pb-3 mb-5">
+	<form asp-action="AddAdmins">
+		<div class="login-card m-5">			
+			<div>
+				<h1 class="AddText">Adicionar Administrador</h1>
+			</div>
+			<div>
+				<label asp-for="Username">Username</label>
+				<br>
+				<input asp-for="Username" type="text" placeholder="Enter Username">
+			</div>
+			<div>
+				<label asp-for="Nome">Nome</label>
+				<br>
+				<input asp-for="Nome" type="text" placeholder="Enter Name">
+			</div>
+			<div>
+				<label asp-for="Email">Email</label>
+				<br>
+				<input asp-for="Email" type="text" placeholder="Enter Email">
+			</div>
+			<div>
+				<label asp-for="Passwd">Password</label>
+				<br>
+				<input asp-for="Passwd" type="password" placeholder="Enter Password">
+			</div>
+			<div>
+				<label>Confirmar Password</label>
+				<br>
+				<input type="password" placeholder="Enter Password">
+			</div>
+			@if (TempData["errormsg"] != null) {
+				<div>
+					<p class="errormsg">@TempData["errormsg"]</p>
+				</div>
+			}
+			<div>
+				<button type="submit">Adicionar</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+

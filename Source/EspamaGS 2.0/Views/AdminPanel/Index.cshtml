@@ -1,0 +1,45 @@
+﻿@model Utilizador
+@{
+	Layout = null;
+}
+
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Admin Panel - EspamaGS</title>
+	<link rel="stylesheet" href="/css/admin.css">
+
+</head>
+<body>
+	<div class="login-card-container">	
+		<form asp-action="Index">
+			<div class="login-card">
+				<div>
+					<img class="logo" src="/img/EspamaGS.png">
+				</div>
+				<div>
+					<label asp-for="Username">Username</label>
+					<br>
+					<input asp-for="Username" type="text" placeholder="Enter Username">
+				</div>
+				<div>
+					<label asp-for="Passwd">Password</label>
+					<br>
+					<input asp-for="Passwd" type="password" placeholder="Enter Password">
+				</div>
+				@if (TempData["errormsg"] != null) {
+					<div>
+						<p class="errormsg">@TempData["errormsg"]</p>
+					</div>
+				}
+				<div>
+					<button type="submit">Login</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+</body>

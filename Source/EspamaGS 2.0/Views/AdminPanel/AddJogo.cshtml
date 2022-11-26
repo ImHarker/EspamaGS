@@ -1,0 +1,66 @@
+﻿@model Jogo
+@{
+    ViewData["Title"] = "AddJogo";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section AddToHead{
+	<link href="@Url.Content("~/css/admin.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="add-card-container pb-3 mb-5">
+	<form asp-action="AddJogo" enctype="multipart/form-data">
+		<div class="login-card m-5">			
+			<div>
+				<h1 class="AddText">Adicionar Jogo</h1>
+			</div>
+			<div>
+				<label asp-for="Nome">Título</label>
+				<br>
+				<input asp-for="Nome" type="text" placeholder="Enter Title">
+			</div>
+			<div>
+				<label asp-for="Descricao">Descrição</label>
+				<br>
+				<div id="descJogocontainer">
+				<textarea id="descJogo" asp-for="Descricao" rows="10" type="text" placeholder="Enter Desc"></textarea>
+				</div>
+			</div>
+			<div>
+				<label asp-for="Foto">Foto</label>
+				<br>
+				<input asp-for="Foto" type="file">
+			</div>
+			<div>
+				<label asp-for="Preco">Preço</label>
+				<br>
+				<input asp-for="Preco" type="text" placeholder="Enter Price">
+			</div>
+			<div>
+				<label asp-for="IdCategoria">Categoria</label>
+				<br>
+				<input asp-for="IdCategoria" type="text" placeholder="Enter Price">
+			</div>
+			<div>
+				<label asp-for="IdDesenvolvedora">Desenvolvedora</label>
+				<br>
+				<input asp-for="IdDesenvolvedora" type="text" placeholder="Enter Price">
+			</div>
+			<div>
+				<label asp-for="IdPlataforma">Plataforma</label>
+				<br>
+				<input asp-for="IdPlataforma" type="text" placeholder="Enter Price">
+			</div>
+			@if (TempData["errormsg"] != null) {
+				<div>
+					<p class="errormsg">@TempData["errormsg"]</p>
+				</div>
+			}
+			<div>
+				<button type="submit">Adicionar</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+

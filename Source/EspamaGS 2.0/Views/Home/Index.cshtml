@@ -1,0 +1,66 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+
+
+<div class="searchbar-container d-flex justify-content-center align-content-center align-items-center">
+	<svg id="searchico" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="25" y1="25" x2="16.65" y2="16.65"></line></svg>
+	<input class="searchbar" id="searchbar" placeholder="Pesquisar um Jogo" onfocus="onFocusSearchBar()"/>
+</div>
+
+<div hidden class="unhideme text-white p-2 mb-5 row justify-content-center text-center">
+	<div class="col-sm-2 d-inline-block">
+		<label for="Categorias">Categoria</label>
+		<br/>
+		<select id="Categorias">
+			<option value="Qualquer">Qualquer</option>
+			<option value="Preferidas">Preferidas</option>
+			<option value="Acao">Ação</option>
+			<option value="FPS">FPS</option>
+			<option value="Corrida">Corrida</option>
+		</select>
+	</div>
+	<div class="col-sm-2 d-inline-block">
+	<label for="Plataforma">Plataforma</label>
+		<select id="Plataforma">
+			<option value="Qualquer">Qualquer</option>
+			<option value="PC">PC</option>
+			<option value="Xbox">Xbox</option>
+			<option value="PS">PlayStation</option>
+		</select>
+			</div>
+	<div class="col-sm-2 d-inline-block">
+		<label for="ordenar">Ordenar Por</label>
+		<select id="ordenar">
+			<option value="Popular">Mais Populares</option>
+			<option value="Preco">Preço</option>
+			<option value="Data">Data Lançamento</option>
+		</select>
+	</div>
+	<div class="col-sm-2 d-inline-block">
+		<label for="ordem">Ordem</label>
+			<select id="ordem">
+				<option value="Desc">Descendente</option>
+				<option value="Asc">Ascendente</option>
+			</select>
+	</div>
+</div>
+
+<div class="row">
+	<!-- TEMPLATE-->
+	<div class="gamecard col-sm-4 col-md-2 m-3 p-3 bg-dark text-white">
+		<a href="">
+			<span class="gamecard-link"></span>
+		</a>
+		<div class="d-flex justify-content-center align-items-center">
+			<img class="mb-2 img-fluid game-image" src="https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/games/fob/1280/V.jpg">
+		</div>
+			<p class="game-name m-0">Grand Theft Auto V</p>
+			<div class="d-flex">
+			<span class="badge rounded-pill bg-danger m-1 mb-2">Ação</span>
+			<span class="badge rounded-pill bg-primary m-1 mb-2">PC</span>
+			</div>
+			<p class="game-price">70.00 €</p>
+	</div>
+	<!-- FIM TEMPLATE-->
+</div>
