@@ -1,4 +1,4 @@
-﻿@model Utilizador
+﻿@model EspamaGS_2._0.Areas.Identity.Pages.Account.RegisterModel
 @{
     ViewData["Title"] = "AddAdmins";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -15,35 +15,30 @@
 				<h1 class="AddText">Adicionar Administrador</h1>
 			</div>
 			<div>
-				<label asp-for="Username">Username</label>
+				<label asp-for="Input.Email">Username</label>
 				<br>
-				<input asp-for="Username" type="text" placeholder="Enter Username">
+				<input asp-for="Input.Email" type="text" placeholder="Enter Username">
 			</div>
 			<div>
-				<label asp-for="Nome">Nome</label>
+				<label asp-for="Input.Email">Nome</label>
 				<br>
-				<input asp-for="Nome" type="text" placeholder="Enter Name">
+				<input asp-for="Input.Email" type="text" placeholder="Enter Name">
 			</div>
 			<div>
-				<label asp-for="Email">Email</label>
+				<label asp-for="Input.Email">Email</label>
 				<br>
-				<input asp-for="Email" type="text" placeholder="Enter Email">
+				<input asp-for="Input.Email" type="text" placeholder="Enter Email">
 			</div>
 			<div>
-				<label asp-for="Passwd">Password</label>
+				<label asp-for="Input.Password">Password</label>
 				<br>
-				<input asp-for="Passwd" type="password" placeholder="Enter Password">
+				<input asp-for="Input.Password" type="password" placeholder="Enter Password">
 			</div>
 			<div>
-				<label>Confirmar Password</label>
+				<label asp-for="Input.ConfirmPassword">Confirmar Password</label>
 				<br>
-				<input type="password" placeholder="Enter Password">
+				<input asp-for="Input.ConfirmPassword" type="password" placeholder="Enter Password">
 			</div>
-			@if (TempData["errormsg"] != null) {
-				<div>
-					<p class="errormsg">@TempData["errormsg"]</p>
-				</div>
-			}
 			<div>
 				<button type="submit">Adicionar</button>
 			</div>

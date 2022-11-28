@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EspamaGS_2._0.Models {
-    public partial class Plataforma {
-        public Plataforma() {
+namespace EspamaGS_2._0.Models
+{
+    public partial class Plataforma
+    {
+        public Plataforma()
+        {
             Jogos = new HashSet<Jogo>();
         }
 

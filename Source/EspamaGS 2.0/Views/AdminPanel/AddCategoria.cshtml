@@ -1,0 +1,29 @@
+﻿@model Categoria
+@{
+    ViewData["Title"] = "AddCategoria";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section AddToHead{
+	<link href="@Url.Content("~/css/admin.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="add-card-container pb-3 mb-5">
+	<form asp-action="AddCategoria">
+		<div class="login-card m-5">			
+			<div>
+				<h1 class="AddText">Adicionar Categoria</h1>
+			</div>
+			<div>
+				<label asp-for="Nome">Nome</label>
+				<br>
+				<input asp-for="Nome" type="text" placeholder="Enter Name">
+			</div>
+			<div>
+				<button type="submit">Adicionar</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+

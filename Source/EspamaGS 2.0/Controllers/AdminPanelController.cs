@@ -5,56 +5,94 @@ using Microsoft.AspNetCore.Mvc;
 namespace EspamaGS_2._0.Controllers {
     public class AdminPanelController : Controller {
         private readonly EspamaGSContext _context;
-        public AdminPanelController(EspamaGSContext context) { _context = context; }
+        private readonly IHostEnvironment _he;
+        public AdminPanelController(EspamaGSContext context, IHostEnvironment he) {
+            _context = context;
+            _he = he;
+        }
 
 
         public IActionResult Index() {
-            if (TempData.ContainsKey("username")) return RedirectToAction(nameof(Dashboard));
 
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Index(Utilizador user) {
-            if (_context.Utilizadors.Any(x => x.Username == user.Username && x.Passwd == user.Passwd)) {
-                TempData["username"] = user.Username;
-                return RedirectToAction(nameof(Dashboard));
-            }
-
-            TempData["errormsg"] = "Credenciais Inválidas";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Dashboard));
         }
 
         public IActionResult LogsCompras() {
-            if (!TempData.ContainsKey("username")) return RedirectToAction(nameof(Index));
             return View();
         }
         public IActionResult LogsFuncionarios() {
-            if (!TempData.ContainsKey("username")) return RedirectToAction(nameof(Index));
             return View();
         }
         public IActionResult LogsAdmins() {
-            if (!TempData.ContainsKey("username")) return RedirectToAction(nameof(Index));
             return View();
         }
 
         public IActionResult AddFuncionarios() {
-            if (!TempData.ContainsKey("username")) return RedirectToAction(nameof(Index));
             return View();
         }
 
         public IActionResult AddAdmins() {
-            if (!TempData.ContainsKey("username")) return RedirectToAction(nameof(Index));
             return View();
         }
 
+        
+        public IActionResult AddCategoria() {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCategoria(Categoria c) {
+            _context.Categoria.Add(c);
+            await _context.SaveChangesAsync();
+            return View();
+        }
+
+        public IActionResult AddPlataforma() {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddPlataforma(Plataforma p) {
+            _context.Plataformas.Add(p);
+            await _context.SaveChangesAsync();
+            return View();
+        }
+        
+        public IActionResult AddDesenvolvedora() {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddDesenvolvedora(Desenvolvedora d) {
+            _context.Desenvolvedoras.Add(d);
+            await _context.SaveChangesAsync();
+            return View();
+        }
+
+
         public IActionResult AddJogo() {
-            if (!TempData.ContainsKey("username")) return RedirectToAction(nameof(Index));
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddJogo(Jogo jogo, IFormFile foto) {
+            if (foto == null) return View(jogo); 
+                jogo.Foto = "";
+            string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/");
+            Directory.CreateDirectory(dest);
+            jogo.IdFuncionario = "a";
+            jogo.DataRegisto = DateTime.Now;
+            jogo.DataLancamento = DateTime.Today;
+            _context.Jogos.Add(jogo);
+            await _context.SaveChangesAsync();
+            jogo.Foto = jogo.Id.ToString() + "." + foto.FileName.Split(".").Last();
+            _context.Jogos.Update(jogo);
+            await _context.SaveChangesAsync();
+            dest = Path.Combine(dest, jogo.Foto);
+            FileStream fs = new FileStream(dest, FileMode.Create);
+            foto.CopyTo(fs);
+            fs.Close();
             return View();
         }
 
         public IActionResult Dashboard() {
-            if (!TempData.ContainsKey("username")) return RedirectToAction(nameof(Index));
             return View();
         }
     }

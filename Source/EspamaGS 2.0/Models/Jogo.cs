@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace EspamaGS_2._0.Models {
-    public partial class Jogo {
-        public Jogo() {
+namespace EspamaGS_2._0.Models
+{
+    public partial class Jogo
+    {
+        public Jogo()
+        {
             Compras = new HashSet<Compra>();
         }
 
@@ -15,7 +19,7 @@ namespace EspamaGS_2._0.Models {
         public int IdCategoria { get; set; }
         public int IdDesenvolvedora { get; set; }
         public int IdPlataforma { get; set; }
-        public int IdFuncionario { get; set; }
+        public string IdFuncionario { get; set; } = null!;
         public DateTime DataRegisto { get; set; }
         public DateTime DataLancamento { get; set; }
 
