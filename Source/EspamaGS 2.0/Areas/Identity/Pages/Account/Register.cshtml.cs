@@ -120,6 +120,7 @@ namespace EspamaGS_2._0.Areas.Identity.Pages.Account {
                 if (result.Succeeded) {
                     _logger.LogInformation("User created a new account with password.");
 
+                    await _userManager.AddToRoleAsync(user, "Cliente");
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

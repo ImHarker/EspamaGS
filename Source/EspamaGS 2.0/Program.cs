@@ -23,12 +23,18 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => {
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 8;
     options.Password.RequiredUniqueChars = 1;
-}).AddEntityFrameworkStores<EspamaGSContext>();
+}).AddRoles<IdentityRole>().AddEntityFrameworkStores<EspamaGSContext>();
 
 
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope()) {
+    var rolemanger = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    InitRoles.Init(rolemanger);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {

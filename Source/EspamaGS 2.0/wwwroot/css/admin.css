@@ -144,3 +144,12 @@ transform: scale(1.5);
 .text-danger {
     color: #dc3545;
 }
+.list-style-none ul {
+    list-style: none;
+    background-color: rgba(255, 255, 255, .3);
+    border-radius: 25px;
+    padding: 10px;
+    width: 75%;
+    margin: auto;
+    margin-bottom: 30px;
+}

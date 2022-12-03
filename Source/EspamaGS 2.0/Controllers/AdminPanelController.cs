@@ -1,9 +1,11 @@
 ﻿using EspamaGS_2._0.Data;
 using EspamaGS_2._0.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EspamaGS_2._0.Controllers {
+    [Authorize(Roles = "Admin, Funcionario")]
     public class AdminPanelController : Controller {
         private readonly EspamaGSContext _context;
         private readonly IHostEnvironment _he;
@@ -24,14 +26,15 @@ namespace EspamaGS_2._0.Controllers {
         public IActionResult LogsFuncionarios() {
             return View();
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult LogsAdmins() {
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult AddFuncionarios() {
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult AddAdmins() {
             return View();
         }
