@@ -6,20 +6,21 @@
 
 //#region Search Bar - ESC and Enter
 
-    $(document).on("keydown", function (e) {
-        if (e.which == 27) {
-            CloseSearch();
-        }
-    });
+$(document).on("keydown", function (e) {
+    if (e.which == 27) {
+        $(".searchbar").val("");
+        CloseSearch();
+    }
+});
 
 $(".searchbar").on("keydown", function (e) {
     if (e.which == 13) {
         CloseSearch();
-        }
-    }); 
+    }
+});
 
 function CloseSearch() {
-let hidden = document.getElementsByClassName("unhideme");
+    let hidden = document.getElementsByClassName("unhideme");
     if (document.getElementById("searchbar") === null) return;
     document.getElementById("searchico").style.stroke = "#808080";
     document.getElementById("searchico").style.zIndex = 3;
@@ -34,7 +35,7 @@ let hidden = document.getElementsByClassName("unhideme");
 function onFocusSearchBar() {
     let hidden = document.getElementsByClassName("unhideme");
     console.log(document.getElementById("searchico"));
-    document.getElementById("searchico").style.stroke = "#808080" ;
+    document.getElementById("searchico").style.stroke = "#808080";
     document.getElementById("searchico").style.zIndex = 3;
     document.getElementById("searchbar").style.boxShadow = "0 0 0 9999px #000000";
     document.getElementById("searchbar").style.opacity = "0.75";

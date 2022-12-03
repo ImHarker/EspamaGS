@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using EspamaGS_2._0.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EspamaGS_2._0.Controllers {
+    [Authorize]
     public class HomeController : Controller {
         private readonly ILogger<HomeController> _logger;
         private readonly EspamaGSContext _context;
@@ -12,7 +14,7 @@ namespace EspamaGS_2._0.Controllers {
             _logger = logger;
             _context = context;
         }
-
+        [AllowAnonymous]
         public IActionResult Index() {
             TempData["cartitems"] = 100;
             return View();
@@ -29,7 +31,7 @@ namespace EspamaGS_2._0.Controllers {
             return View();
         }
 
-
+         
         public IActionResult Checkout() {
             return View();
         }

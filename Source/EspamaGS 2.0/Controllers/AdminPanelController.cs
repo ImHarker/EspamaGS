@@ -1,6 +1,7 @@
 ﻿using EspamaGS_2._0.Data;
 using EspamaGS_2._0.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EspamaGS_2._0.Controllers {
     public class AdminPanelController : Controller {
@@ -35,7 +36,7 @@ namespace EspamaGS_2._0.Controllers {
             return View();
         }
 
-        
+
         public IActionResult AddCategoria() {
             return View();
         }
@@ -56,7 +57,7 @@ namespace EspamaGS_2._0.Controllers {
             await _context.SaveChangesAsync();
             return View();
         }
-        
+
         public IActionResult AddDesenvolvedora() {
             return View();
         }
@@ -73,8 +74,8 @@ namespace EspamaGS_2._0.Controllers {
         }
         [HttpPost]
         public async Task<IActionResult> AddJogo(Jogo jogo, IFormFile foto) {
-            if (foto == null) return View(jogo); 
-                jogo.Foto = "";
+            if (foto == null) return View(jogo);
+            jogo.Foto = "";
             string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/");
             Directory.CreateDirectory(dest);
             jogo.IdFuncionario = "a";

@@ -33,22 +33,6 @@ namespace EspamaGS_2._0.Data {
                 entity.HasKey(e => e.IdUtilizador)
                     .HasName("PK__Administ__7BC3137CC20F3687");
 
-                entity.ToTable("Administrador");
-
-                entity.Property(e => e.IdUtilizador)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("ID_UTILIZADOR");
-
-                entity.Property(e => e.DataRegisto)
-                    .HasColumnType("datetime")
-                    .HasColumnName("DATA_REGISTO");
-
-                entity.Property(e => e.IdAdmin)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("ID_ADMIN");
-
                 entity.HasOne(d => d.IdAdminNavigation)
                     .WithMany(p => p.InverseIdAdminNavigation)
                     .HasForeignKey(d => d.IdAdmin)
@@ -56,36 +40,9 @@ namespace EspamaGS_2._0.Data {
                     .HasConstraintName("FK__Administr__ID_AD__1332DBDC");
             });
 
-
-            modelBuilder.Entity<Categoria>(entity => {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Nome)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("NOME");
-            });
-
             modelBuilder.Entity<Compra>(entity => {
                 entity.HasKey(e => new { e.IdCliente, e.IdJogo })
                     .HasName("PK__Compra__6B235F1E45A1618F");
-
-                entity.ToTable("Compra");
-
-                entity.Property(e => e.IdCliente)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("ID_CLIENTE");
-
-                entity.Property(e => e.IdJogo).HasColumnName("ID_JOGO");
-
-                entity.Property(e => e.DataCompra)
-                    .HasColumnType("datetime")
-                    .HasColumnName("DATA_COMPRA");
-
-                entity.Property(e => e.Preco)
-                    .HasColumnType("money")
-                    .HasColumnName("PRECO");
 
                 entity.HasOne(d => d.IdJogoNavigation)
                     .WithMany(p => p.Compras)
@@ -94,41 +51,9 @@ namespace EspamaGS_2._0.Data {
                     .HasConstraintName("FK__Compra__ID_JOGO__2180FB33");
             });
 
-            modelBuilder.Entity<Desenvolvedora>(entity => {
-                entity.ToTable("Desenvolvedora");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Nome)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("NOME");
-            });
-
             modelBuilder.Entity<Funcionario>(entity => {
                 entity.HasKey(e => e.IdUtilizador)
                     .HasName("PK__Funciona__7BC3137C400E1255");
-
-                entity.ToTable("Funcionario");
-
-                entity.Property(e => e.IdUtilizador)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("ID_UTILIZADOR");
-
-                entity.Property(e => e.DataRegisto)
-                    .HasColumnType("datetime")
-                    .HasColumnName("DATA_REGISTO");
-
-                entity.Property(e => e.IdAdmin)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("ID_ADMIN");
-
-                entity.Property(e => e.Telefone)
-                    .HasMaxLength(9)
-                    .IsUnicode(false)
-                    .HasColumnName("TELEFONE");
 
                 entity.HasOne(d => d.IdAdminNavigation)
                     .WithMany(p => p.Funcionarios)
@@ -138,48 +63,6 @@ namespace EspamaGS_2._0.Data {
             });
 
             modelBuilder.Entity<Jogo>(entity => {
-                entity.ToTable("Jogo");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.DataLancamento)
-                    .HasColumnType("date")
-                    .HasColumnName("DATA_LANCAMENTO");
-
-                entity.Property(e => e.DataRegisto)
-                    .HasColumnType("datetime")
-                    .HasColumnName("DATA_REGISTO");
-
-                entity.Property(e => e.Descricao)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("DESCRICAO");
-
-                entity.Property(e => e.Foto)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("FOTO");
-
-                entity.Property(e => e.IdCategoria).HasColumnName("ID_CATEGORIA");
-
-                entity.Property(e => e.IdDesenvolvedora).HasColumnName("ID_DESENVOLVEDORA");
-
-                entity.Property(e => e.IdFuncionario)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("ID_FUNCIONARIO");
-
-                entity.Property(e => e.IdPlataforma).HasColumnName("ID_PLATAFORMA");
-
-                entity.Property(e => e.Nome)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("NOME");
-
-                entity.Property(e => e.Preco)
-                    .HasColumnType("money")
-                    .HasColumnName("PRECO");
-
                 entity.HasOne(d => d.IdCategoriaNavigation)
                     .WithMany(p => p.Jogos)
                     .HasForeignKey(d => d.IdCategoria)
@@ -205,27 +88,9 @@ namespace EspamaGS_2._0.Data {
                     .HasConstraintName("FK__Jogo__ID_PLATAFO__1AD3FDA4");
             });
 
-            modelBuilder.Entity<Plataforma>(entity => {
-                entity.ToTable("Plataforma");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Nome)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasColumnName("NOME");
-            });
-
             modelBuilder.Entity<Preferencia>(entity => {
                 entity.HasKey(e => new { e.IdCliente, e.IdCategoria })
                     .HasName("PK__Preferen__671E10CADF476741");
-
-                entity.Property(e => e.IdCliente)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("ID_CLIENTE");
-
-                entity.Property(e => e.IdCategoria).HasColumnName("ID_CATEGORIA");
 
                 entity.HasOne(d => d.IdCategoriaNavigation)
                     .WithMany(p => p.Preferencia)
