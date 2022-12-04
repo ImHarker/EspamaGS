@@ -8,9 +8,16 @@
 	<link href="@Url.Content("~/css/admin.css")" rel="stylesheet" type="text/css" />
 }
 
+@if (TempData["msg"] != null) {
+	<div class="alert alert-success alert-dismissible fade show">
+		@TempData["msg"]
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
 <div class="add-card-container pb-3 mb-5">
 	<form asp-action="AddJogo" enctype="multipart/form-data">
-		<div class="login-card m-5">			
+		<div class="login-card addjogo-card m-5">			
 			<div>
 				<h1 class="AddText">Adicionar Jogo</h1>
 			</div>
@@ -37,19 +44,27 @@
 				<input asp-for="Preco" type="text" placeholder="Enter Price">
 			</div>
 			<div>
+				<label asp-for="DataLancamento">Data de Lançamento</label>
+				<br>
+				<input asp-for="DataLancamento" type="date"/>
+			</div>
+			<div>
 				<label asp-for="IdCategoria">Categoria</label>
 				<br>
-				<input asp-for="IdCategoria" type="text" placeholder="Enter Price">
+				<select asp-for="IdCategoria" class="form-control form-select" asp-items='new SelectList(ViewBag.Categorias, "Id", "Nome")'>
+				</select>
 			</div>
 			<div>
 				<label asp-for="IdDesenvolvedora">Desenvolvedora</label>
 				<br>
-				<input asp-for="IdDesenvolvedora" type="text" placeholder="Enter Price">
+					<select asp-for="IdDesenvolvedora" class="form-control form-select" asp-items='new SelectList(ViewBag.Desenvolvedoras, "Id", "Nome")'>
+					</select>
 			</div>
 			<div>
 				<label asp-for="IdPlataforma">Plataforma</label>
 				<br>
-				<input asp-for="IdPlataforma" type="text" placeholder="Enter Price">
+					<select asp-for="IdPlataforma" class="form-control form-select" asp-items='new SelectList(ViewBag.Plataformas, "Id", "Nome")'>
+					</select>
 			</div>
 			<div>
 				<button type="submit">Adicionar</button>

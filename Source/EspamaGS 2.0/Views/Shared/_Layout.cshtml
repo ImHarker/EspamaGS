@@ -54,12 +54,16 @@
 								Loja
 							</a>
 
+
 							<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
 								<li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="">Página Inicial</a></li>
 								<li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Favoritos">Categorias Preferidas</a></li>
 							</ul>
 						</div>
 					</li>
+					@if (User.IsInRole("Admin") || User.IsInRole("Funcionario")) {
+							<li class="nav-item"><a class="nav-link text-white" asp-area="" asp-controller="AdminPanel" asp-action="Dashboard">Dashboard</a></li>
+					}
 				</ul>
 				<ul class="navbar-nav flex-grow-1 justify-content-end">
 
@@ -111,7 +115,7 @@
 </div>
 
 <footer class="footer text-muted border-top border-dark">
-	<div class="container text-light">
+	<div class="container text-light p-1">
 		&copy; 2022 - EspamaGS
 	</div>
 </footer>

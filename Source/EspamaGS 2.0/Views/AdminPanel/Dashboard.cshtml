@@ -1,6 +1,62 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@{
 	ViewData["Title"] = "Dashboard";
 	Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 <h1 class="text-white mb-5">@User.Identity!.Name, Welcome to the Admin Dashboard</h1>
+<div class="d-flex">
 
+<div class="col-sm-2 px-3">
+	<table class="table table-bordered table-hover table-dark">
+		<thead>
+		<tr>
+			<th scope="col">Utilizadores</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var user in ViewBag.Users) {
+			<tr>
+				<td> @user.UserName</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+</div>
+	<div class="col-sm-2 px-3">
+	<table class="table table-bordered table-hover table-dark">
+		<thead>
+		<tr>
+			<th scope="col">Funcionários</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var user in ViewBag.Users) {
+			@if (UserManager.IsInRoleAsync(user, "Funcionario").Result) {
+				<tr>
+					<td>@user.UserName</td>
+				</tr>
+			}
+		}
+		</tbody>
+	</table>
+</div>
+	<div class="col-sm-2 px-3">
+	<table class="table table-bordered table-hover table-dark">
+		<thead>
+		<tr>
+			<th scope="col">Administradores</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var user in ViewBag.Users) {
+			@if (UserManager.IsInRoleAsync(user, "Admin").Result) {
+				<tr>
+					<td>@user.UserName</td>
+				</tr>
+			}
+		}
+		</tbody>
+	</table>
+</div>
+</div>

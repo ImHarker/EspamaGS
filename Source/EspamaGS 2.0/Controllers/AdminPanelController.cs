@@ -1,6 +1,7 @@
 ﻿using EspamaGS_2._0.Data;
 using EspamaGS_2._0.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,9 +10,11 @@ namespace EspamaGS_2._0.Controllers {
     public class AdminPanelController : Controller {
         private readonly EspamaGSContext _context;
         private readonly IHostEnvironment _he;
-        public AdminPanelController(EspamaGSContext context, IHostEnvironment he) {
+        private readonly UserManager<IdentityUser> _userManager;
+        public AdminPanelController(EspamaGSContext context, IHostEnvironment he, UserManager<IdentityUser> userManager) {
             _context = context;
             _he = he;
+            _userManager = userManager;
         }
 
 
@@ -73,17 +76,25 @@ namespace EspamaGS_2._0.Controllers {
 
 
         public IActionResult AddJogo() {
+            ViewData["Categorias"] = _context.Categoria.ToList();
+            ViewData["Plataformas"] = _context.Plataformas.ToList();
+            ViewData["Desenvolvedoras"] = _context.Desenvolvedoras.ToList();
+
+
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> AddJogo(Jogo jogo, IFormFile foto) {
-            if (foto == null) return View(jogo);
+            if (foto == null) return RedirectToAction(nameof(AddJogo));
+            if (jogo.Nome == null) return RedirectToAction(nameof(AddJogo));
+            if (jogo.Descricao == null) return RedirectToAction(nameof(AddJogo));
+            if (jogo.Preco == -1) return RedirectToAction(nameof(AddJogo));
+            if (jogo.DataLancamento == null) return RedirectToAction(nameof(AddJogo));
             jogo.Foto = "";
             string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/");
             Directory.CreateDirectory(dest);
-            jogo.IdFuncionario = "a";
+            jogo.IdFuncionario = User.Identity.Name;
             jogo.DataRegisto = DateTime.Now;
-            jogo.DataLancamento = DateTime.Today;
             _context.Jogos.Add(jogo);
             await _context.SaveChangesAsync();
             jogo.Foto = jogo.Id.ToString() + "." + foto.FileName.Split(".").Last();
@@ -93,10 +104,12 @@ namespace EspamaGS_2._0.Controllers {
             FileStream fs = new FileStream(dest, FileMode.Create);
             foto.CopyTo(fs);
             fs.Close();
-            return View();
+            TempData["msg"] = "O jogo '" + jogo.Nome + "' foi inserido com sucesso!";
+            return RedirectToAction(nameof(AddJogo));
         }
 
         public IActionResult Dashboard() {
+            ViewData["Users"] = _userManager.Users.ToList();
             return View();
         }
     }

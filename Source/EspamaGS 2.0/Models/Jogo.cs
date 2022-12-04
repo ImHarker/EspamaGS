@@ -29,8 +29,9 @@ namespace EspamaGS_2._0.Models
         [StringLength(255)]
         [Unicode(false)]
         public string Descricao { get; set; } = null!;
-        [Column("PRECO", TypeName = "money")]
-        public decimal Preco { get; set; }
+
+        [Column("PRECO", TypeName = "money")] 
+        public decimal Preco { get; set; } = -1.00m;
         [Column("ID_CATEGORIA")]
         public int IdCategoria { get; set; }
         [Column("ID_DESENVOLVEDORA")]
@@ -41,10 +42,11 @@ namespace EspamaGS_2._0.Models
         [StringLength(20)]
         [Unicode(false)]
         public string IdFuncionario { get; set; } = null!;
+
         [Column("DATA_REGISTO", TypeName = "datetime")]
-        public DateTime DataRegisto { get; set; }
+        public DateTime? DataRegisto { get; set; } = null!;
         [Column("DATA_LANCAMENTO", TypeName = "date")]
-        public DateTime DataLancamento { get; set; }
+        public DateTime? DataLancamento { get; set; } = null!;
 
         [ForeignKey("IdCategoria")]
         [InverseProperty("Jogos")]

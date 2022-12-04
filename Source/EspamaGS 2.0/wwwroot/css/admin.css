@@ -12,15 +12,25 @@
     justify-content: center;
     text-align: center;
     min-height: 100vh;
+    max-width: 525px;
+    margin: auto;
+}
+.add-card-sm {
+    min-height: 50vh !important;
 }
 
 .AddText{
     font-weight: 600;
-    padding: 10%;
+    padding-top: 10%;
+    padding-bottom: 10%;
 }
 
 .registerbody {
     min-height: 120vh !important;
+}
+
+.addjogo-card::before {
+    transform: rotate(-3.5deg) !important;
 }
 
 .login-card {
@@ -54,7 +64,9 @@
 
 .login-card input[type="text"],
 .login-card input[type="password"],
-input[type="file"] {
+.login-card input[type="file"],
+.login-card input[type="date"],
+.login-card input[type="number"] {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 100%;
     border: none;
@@ -66,18 +78,22 @@ input[type="file"] {
     margin-bottom: 30px;
     margin-top: 10px;
 }
-
-.login-card button {
-    background: black;
-    border-radius: 100px;
-    width: 55%;
-    padding: 0.75rem;
-    color: white;
-    margin-top: 15px;
-    margin-bottom: 30px;
-    letter-spacing: 2px;
-    transition: background .5s;
+.login-card input[type="date"],
+.login-card input[type="number"] {
+    text-align: center;
 }
+
+    .login-card button {
+        background: black;
+        border-radius: 100px;
+        width: 55%;
+        padding: 0.75rem;
+        color: white;
+        margin-top: 15px;
+        margin-bottom: 30px;
+        letter-spacing: 2px;
+        transition: background .5s;
+    }
 
 .errormsg {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -152,4 +168,18 @@ transform: scale(1.5);
     width: 75%;
     margin: auto;
     margin-bottom: 30px;
+}
+
+.form-select {
+    border-radius: 25px !important;
+    width: 75% !important;
+    margin: auto;
+    padding: 1rem !important;
+    margin-bottom: 30px;
+    margin-top: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+    font-size: 100% !important;
+    text-align: center;
+    border: none !important;
+    background-color: rgba(255, 255, 255, .3) !important;
 }
