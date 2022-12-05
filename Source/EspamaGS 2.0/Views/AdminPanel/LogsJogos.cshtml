@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Jogo>
+@{
+    ViewData["Title"] = "LogsJogos";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1 class="text-white mb-5">Logs Jogos</h1>
+
+<table class="table table-bordered table-hover table-dark">
+	<thead>
+	<tr>
+		<th scope="col">Funcionário</th>
+		<th scope="col">Telefone</th>
+		<th scope="col">ID Jogo</th>
+		<th scope="col">Jogo</th>
+		<th scope="col">Data</th>
+	</tr>
+	</thead>
+	<tbody>
+		@foreach (var jogo in Model) {
+			<tr>
+				<td>@jogo.IdFuncionarioNavigation.IdUtilizador</td>
+				<td>@jogo.IdFuncionarioNavigation.Telefone</td>
+				<td>@jogo.Id</td>
+				<td>@jogo.Nome</td>
+				<td>@jogo.DataRegisto</td>
+			</tr>
+		}
+	</tbody>
+</table>
+

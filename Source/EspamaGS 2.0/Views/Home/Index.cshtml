@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<Jogo>
+@{
 	ViewData["Title"] = "Home Page";
 }
 
@@ -15,26 +16,17 @@
 	<div class="col-sm-2 d-inline-block">
 		<label for="Categorias">Categoria</label>
 		<br/>
-		<select id="Categorias">
-			<option value="Qualquer">Qualquer</option>
-			<option value="Preferidas">Preferidas</option>
-			<option value="Acao">Ação</option>
-			<option value="FPS">FPS</option>
-			<option value="Corrida">Corrida</option>
+		<select id="Categorias" class="form-control form-select" asp-items='new SelectList(ViewBag.Categorias, "Id", "Nome")'>
 		</select>
 	</div>
 	<div class="col-sm-2 d-inline-block">
 	<label for="Plataforma">Plataforma</label>
-		<select id="Plataforma">
-			<option value="Qualquer">Qualquer</option>
-			<option value="PC">PC</option>
-			<option value="Xbox">Xbox</option>
-			<option value="PS">PlayStation</option>
+		<select id="Plataforma" class="form-control form-select" asp-items='new SelectList(ViewBag.Plataformas, "Id", "Nome")'>
 		</select>
 			</div>
 	<div class="col-sm-2 d-inline-block">
 		<label for="ordenar">Ordenar Por</label>
-		<select id="ordenar">
+		<select id="ordenar" class="form-control form-select">
 			<option value="Popular">Mais Populares</option>
 			<option value="Preco">Preço</option>
 			<option value="Data">Data Lançamento</option>
@@ -42,7 +34,7 @@
 	</div>
 	<div class="col-sm-2 d-inline-block">
 		<label for="ordem">Ordem</label>
-			<select id="ordem">
+			<select id="ordem" class="form-control form-select">
 				<option value="Desc">Descendente</option>
 				<option value="Asc">Ascendente</option>
 			</select>
@@ -50,20 +42,25 @@
 </div>
 
 <div class="row">
-	<!-- TEMPLATE-->
-	<div class="gamecard col-sm-4 col-md-2 m-3 p-3 bg-dark text-white">
-		<a href="">
-			<span class="gamecard-link"></span>
-		</a>
-		<div class="d-flex justify-content-center align-items-center">
-			<img class="mb-2 img-fluid game-image" src="https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/games/fob/1280/V.jpg">
-		</div>
-			<p class="game-name m-0">Grand Theft Auto V</p>
-			<div class="d-flex">
-			<span class="badge rounded-pill bg-danger m-1 mb-2">Ação</span>
-			<span class="badge rounded-pill bg-primary m-1 mb-2">PC</span>
+	@foreach (var jogo in Model) {
+		<!-- TEMPLATE-->
+		<div class="gamecard col-sm-4 col-md-2 m-3 p-3 bg-dark text-white">
+			<a asp-controller="Home" asp-action="Jogo" asp-route-id="@jogo.Id">
+				<span class="gamecard-link"></span>
+			</a>
+			<div class="d-flex justify-content-center align-items-center">
+				<img class="mb-2 img-fluid game-image" src="/img/Jogos/@jogo.Foto">
 			</div>
-			<p class="game-price">70.00 €</p>
-	</div>
-	<!-- FIM TEMPLATE-->
+			<p class="game-name m-1">@jogo.Nome</p>
+			<div class="d-flex">
+				<span class="badge rounded-pill bg-danger m-1">@jogo.IdCategoriaNavigation.Nome</span>
+				<span class="badge rounded-pill bg-primary m-1">@jogo.IdPlataformaNavigation.Nome</span>
+			</div>
+			<div class="d-flex">
+				<span class="badge rounded-pill bg-warning m-1">@jogo.IdDesenvolvedoraNavigation.Nome</span>
+			</div>
+			<p class="game-price m-1">@Decimal.Round(jogo.Preco, 2) €</p>
+		</div>
+		<!-- FIM TEMPLATE-->
+	}
 </div>

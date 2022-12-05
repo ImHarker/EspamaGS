@@ -26,11 +26,11 @@ namespace EspamaGS_2._0.Controllers {
         public IActionResult LogsCompras() {
             return View();
         }
-        public IActionResult LogsFuncionarios() {
-            return View();
+        public IActionResult LogsJogos() {
+            return View(_context.Jogos.Include(c=>c.IdFuncionarioNavigation).ToList());
         }
         [Authorize(Roles = "Admin")]
-        public IActionResult LogsAdmins() {
+        public IActionResult LogsFuncionarios() {
             return View();
         }
         [Authorize(Roles = "Admin")]
@@ -49,9 +49,12 @@ namespace EspamaGS_2._0.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> AddCategoria(Categoria c) {
+            if(_context.Categoria.Any(x=>x.Nome == c.Nome)) return RedirectToAction(nameof(AddCategoria));
             _context.Categoria.Add(c);
             await _context.SaveChangesAsync();
-            return View();
+            TempData["msg"] = "A categoria '" + c.Nome + "' foi inserida com sucesso!";
+
+            return RedirectToAction(nameof(AddCategoria));
         }
 
         public IActionResult AddPlataforma() {
@@ -59,9 +62,13 @@ namespace EspamaGS_2._0.Controllers {
         }
         [HttpPost]
         public async Task<IActionResult> AddPlataforma(Plataforma p) {
+            if (_context.Plataformas.Any(x => x.Nome == p.Nome)) return RedirectToAction(nameof(AddPlataforma));
+
             _context.Plataformas.Add(p);
             await _context.SaveChangesAsync();
-            return View();
+            TempData["msg"] = "A plataforma '" + p.Nome + "' foi inserida com sucesso!";
+
+            return RedirectToAction(nameof(AddPlataforma));
         }
 
         public IActionResult AddDesenvolvedora() {
@@ -69,9 +76,13 @@ namespace EspamaGS_2._0.Controllers {
         }
         [HttpPost]
         public async Task<IActionResult> AddDesenvolvedora(Desenvolvedora d) {
+            if (_context.Desenvolvedoras.Any(x => x.Nome == d.Nome)) return RedirectToAction(nameof(AddDesenvolvedora));
+
             _context.Desenvolvedoras.Add(d);
             await _context.SaveChangesAsync();
-            return View();
+            TempData["msg"] = "A desenvolvedora '" + d.Nome + "' foi inserida com sucesso!";
+
+            return RedirectToAction(nameof(AddDesenvolvedora));
         }
 
 
@@ -93,7 +104,7 @@ namespace EspamaGS_2._0.Controllers {
             jogo.Foto = "";
             string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/");
             Directory.CreateDirectory(dest);
-            jogo.IdFuncionario = User.Identity.Name;
+            jogo.IdFuncionario = User.Identity!.Name!;
             jogo.DataRegisto = DateTime.Now;
             _context.Jogos.Add(jogo);
             await _context.SaveChangesAsync();

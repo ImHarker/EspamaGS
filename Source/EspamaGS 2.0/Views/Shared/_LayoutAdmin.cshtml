@@ -43,8 +43,8 @@
 
 								<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="LogsCompras">Compras</a></li>
+									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="LogsJogos">Jogos</a></li>
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="LogsFuncionarios">Funcionários</a></li>
-									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="LogsAdmins">Administradores</a></li>
 								</ul>
 							</div>
 						</li>
@@ -57,7 +57,9 @@
 								<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddFuncionarios">Funcionário</a></li>
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddAdmins">Administrador</a></li>
+									<li class="dropdown-divider"></li>
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddJogo">Jogo</a></li>
+									<li class="dropdown-divider"></li>
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddCategoria">Categoria</a></li>
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddPlataforma">Plataforma</a></li>
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddDesenvolvedora">Desenvolvedora</a></li>
@@ -76,7 +78,7 @@
 								<div class="dropdown flex-grow-1">
 									<a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-										@User.Identity.Name
+										@User.Identity!.Name
 									</a>
 
 									<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuLink">

@@ -1,0 +1,14 @@
+﻿@model Jogo
+@{
+    ViewData["Title"] = "Jogo";
+}
+
+<h1>@Model.Nome</h1>
+<img src="/img/Jogos/@Model.Foto"/>
+<p>@Model.Descricao</p>
+<p>@Model.IdCategoriaNavigation.Nome</p>
+<p>@Model.IdDesenvolvedoraNavigation.Nome</p>
+<p>@Model.IdPlataformaNavigation.Nome</p>
+
+<p>@Decimal.Round(Model.Preco, 2)€</p>
+<p>@Model.DataLancamento</p>

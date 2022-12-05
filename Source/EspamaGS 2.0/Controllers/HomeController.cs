@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using EspamaGS_2._0.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace EspamaGS_2._0.Controllers {
     [Authorize]
@@ -16,8 +17,10 @@ namespace EspamaGS_2._0.Controllers {
         }
         [AllowAnonymous]
         public IActionResult Index() {
+            ViewData["Categorias"] = _context.Categoria.ToList();
+            ViewData["Plataformas"] = _context.Plataformas.ToList();
             TempData["cartitems"] = 100;
-            return View();
+            return View(_context.Jogos.Include(c=> c.IdCategoriaNavigation).Include(c=> c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).ToList());
         }
 
 
@@ -34,6 +37,13 @@ namespace EspamaGS_2._0.Controllers {
          
         public IActionResult Checkout() {
             return View();
+        }
+
+        public IActionResult Jogo(int? id) {
+            if (id == null) return RedirectToAction(nameof(Index));
+            Jogo? jogo;
+            if((jogo = _context.Jogos.Include(c=> c.IdCategoriaNavigation).Include(c=>c.IdDesenvolvedoraNavigation).Include(c=> c.IdPlataformaNavigation).FirstOrDefault(x => x.Id == id)) == null) return RedirectToAction(nameof(Index));
+            return View(jogo);
         }
 
 
