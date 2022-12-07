@@ -3,12 +3,33 @@
     ViewData["Title"] = "Jogo";
 }
 
-<h1>@Model.Nome</h1>
-<img src="/img/Jogos/@Model.Foto"/>
-<p>@Model.Descricao</p>
-<p>@Model.IdCategoriaNavigation.Nome</p>
-<p>@Model.IdDesenvolvedoraNavigation.Nome</p>
-<p>@Model.IdPlataformaNavigation.Nome</p>
+<div class="jogo-container text-white bg-dark p-4 bg-opacity-75"> 
+	<h1 class="text-white mb-4">@Model.Nome</h1>
+	<div class="d-flex">
+		<div>
+			<img class="foto-jogo" src="/img/Jogos/@Model.Foto"/>
+		</div>
+		<div>
+			<h4 class="mt-3">Descrição</h4>
+			<p class="desc-jogo mt-2">@Model.Descricao</p>
+			<h5 class="mt-3">Data de Lançamento</h5>
+			<p class="data-jogo">@Model.DataLancamento.ToString()!.Split(" ").First()</p>
+			<div>
+				<span class="badge rounded-pill bg-danger m-1">@Model.IdCategoriaNavigation.Nome</span>
+				<span class="badge rounded-pill bg-primary m-1">@Model.IdPlataformaNavigation.Nome</span>
+				<span class="badge rounded-pill bg-warning m-1">@Model.IdDesenvolvedoraNavigation.Nome</span>
+			</div>
+			<div class="d-flex">
+				<div>
+					<p class="preco-jogo">@Decimal.Round(Model.Preco, 2)€</p>
+				</div>
+				<div>
+					<a class="btn text-white btn-jogo p-3" href="#">Comprar agora</a>
+					<a class="btn text-white btn-jogo p-3" href="#">Adicionar ao Carrinho</a>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<p>@Decimal.Round(Model.Preco, 2)€</p>
-<p>@Model.DataLancamento</p>
+	</div>
+

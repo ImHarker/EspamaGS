@@ -31,7 +31,7 @@ namespace EspamaGS_2._0.Controllers {
         }
         [Authorize(Roles = "Admin")]
         public IActionResult LogsFuncionarios() {
-            return View();
+            return View(_context.Funcionarios.Include(c=> c.IdAdminNavigation).ToList());
         }
         [Authorize(Roles = "Admin")]
         public IActionResult AddFuncionarios() {

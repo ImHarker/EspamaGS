@@ -38,7 +38,7 @@ namespace EspamaGS_2._0.Controllers {
         public IActionResult Checkout() {
             return View();
         }
-
+        [AllowAnonymous]
         public IActionResult Jogo(int? id) {
             if (id == null) return RedirectToAction(nameof(Index));
             Jogo? jogo;

@@ -1,4 +1,8 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@using EspamaGS_2._0.Data
+@model IEnumerable<Funcionario>
+@inject UserManager<IdentityUser> UserManager
+@inject EspamaGSContext DbContext
 @{
     ViewData["Title"] = "LogsFuncionarios";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -16,13 +20,15 @@
 	</tr>
 	</thead>
 	<tbody>
-	
-	<tr>
-		<td>EspamaMaster</td>
-		<td>ZaiduGod12</td>
-		<td>Funcionário</td>
-		<td>01/11/2022</td>
-	</tr>
+	@foreach (var func in Model) {
+		<tr>
+			<td>@func.IdAdminNavigation.IdUtilizador</td>
+			<td>@func.IdUtilizador</td>
+			@if(UserManager.IsInRoleAsync(DbContext.Users.First(c=> c.UserName == func.IdUtilizador), "Admin").Result){<td>Administrador</td>} else
+			if(UserManager.IsInRoleAsync(DbContext.Users.First(c=> c.UserName == func.IdUtilizador), "Funcionario").Result){<td>Funcionário</td>}
+			<td>@func.DataRegisto</td>
+		</tr>
+	}
 	</tbody>
 </table>
 
