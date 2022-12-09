@@ -44,10 +44,16 @@
                 <div>
                     <button type="submit">Login</button>
                 </div>
-                <div class="create">
-                    Don't have an account? <a asp-area="Identity" asp-page="/Account/Register">Create an account</a>
-                </div>
-                <div class="create">
+	            <div class="create">
+		            Don't have an account? <a asp-area="Identity" asp-page="/Account/Register">Create an account</a>
+	            </div>
+	            <div class="create">
+		            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+	            </div>
+	            <div class="create">
+		            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+	            </div>
+	            <div class="create">
                     Wanna go back to the shop? <a asp-area="" asp-controller="Home" asp-action="Index">Click Here</a>
                 </div>
             </div>

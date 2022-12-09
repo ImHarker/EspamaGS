@@ -25,8 +25,22 @@ namespace EspamaGS_2._0.Controllers {
 
 
         public IActionResult Favoritos() {
+            var categoriasEscolhidas =  _context.Preferencia.Where(x => x.IdCliente == User.Identity!.Name)
+                .Include(x => x.IdCategoriaNavigation);
+            ViewData["Categorias"] = _context.Categoria.Where(x => categoriasEscolhidas.FirstOrDefault(c => x.Id == c.IdCategoriaNavigation.Id) == null);
+            return View(categoriasEscolhidas.ToList());
+        }
 
-            return View();
+        [HttpPost]
+        public async Task<IActionResult> Favoritos(int? id) {
+            if (id == null) return RedirectToAction(nameof(Favoritos));
+            Preferencia pref = new Preferencia {
+                IdCliente = User.Identity!.Name!,
+                IdCategoria = (int)id
+            };
+            _context.Preferencia.Add(pref);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Favoritos));
         }
 
         public IActionResult Settings() {
@@ -38,6 +52,7 @@ namespace EspamaGS_2._0.Controllers {
         public IActionResult Checkout() {
             return View();
         }
+
         [AllowAnonymous]
         public IActionResult Jogo(int? id) {
             if (id == null) return RedirectToAction(nameof(Index));

@@ -22,7 +22,7 @@ body {
 
 .footer {
     background: linear-gradient(to right, #333399, #c90ebc);
-    position:absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
     height: 50px;
@@ -242,4 +242,19 @@ img[src="https://localhost:7251/favicon.ico"] {
     font-size: 1.5rem;
     border: 2px solid #bebebe;
     background-color: mediumslateblue;
+}
+
+.favoritos-container {
+    font-size: 1.5rem;
+    width: 75%;
+    height: fit-content;
+    margin: auto;
+    border-radius: 25px;
+    margin-bottom: 5rem;
+}
+
+.favoritos-select {
+    width: 30%;
+    margin-left: 1rem;
+    font-size: 1.5rem;
 }

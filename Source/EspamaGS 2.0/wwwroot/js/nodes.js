@@ -36,13 +36,13 @@ var NodesJs = (function (parameters) {
     t_NodesJs.nodes = [];
 
     t_NodesJs.setWidth = function (width) {
-        canvas.width = width;
-        cw = width;
+        canvas.width = document.documentElement.scrollWidth;
+        cw = document.documentElement.scrollWidth;
     };
 
     t_NodesJs.setHeight = function (height) {
-        canvas.height = height;
-        ch = height;
+        canvas.height = document.documentElement.scrollHeight;
+        ch = document.documentElement.scrollHeight;
     };
 
     t_NodesJs.placeNodes = function (number) {
@@ -73,8 +73,8 @@ var NodesJs = (function (parameters) {
             return;
         }
 
-        var mx = event.clientX;
-        var my = event.clientY;
+        var mx = event.pageX;
+        var my = event.pageY;
 
         t_NodesJs.nodes.forEach(function (_node, _node_i) {
             var nx = _node[0];
@@ -120,8 +120,8 @@ var NodesJs = (function (parameters) {
         canvas = document.getElementById(t_NodesJs.id);
         ctx = canvas.getContext('2d');
 
-        canvas.width = t_NodesJs.width;
-        canvas.height = t_NodesJs.height;
+        canvas.width = document.documentElement.scrollWidth;
+        canvas.height = document.documentElement.scrollHeight;
 
         cw = canvas.width;
         ch = canvas.height;
