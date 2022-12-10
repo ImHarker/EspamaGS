@@ -4,13 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace EspamaGS_2._0.Models
-{
+namespace EspamaGS_2._0.Models {
     [Table("Jogo")]
-    public partial class Jogo
-    {
-        public Jogo()
-        {
+    [Index("IdCategoria", Name = "IX_Jogo_ID_CATEGORIA")]
+    [Index("IdDesenvolvedora", Name = "IX_Jogo_ID_DESENVOLVEDORA")]
+    [Index("IdFuncionario", Name = "IX_Jogo_ID_FUNCIONARIO")]
+    [Index("IdPlataforma", Name = "IX_Jogo_ID_PLATAFORMA")]
+    public partial class Jogo {
+        public Jogo() {
+            Carts = new HashSet<Cart>();
             Compras = new HashSet<Compra>();
         }
 
@@ -26,12 +28,11 @@ namespace EspamaGS_2._0.Models
         [Unicode(false)]
         public string Foto { get; set; } = null!;
         [Column("DESCRICAO")]
-        [StringLength(1024)]
+        [StringLength(255)]
         [Unicode(false)]
         public string Descricao { get; set; } = null!;
-
-        [Column("PRECO", TypeName = "money")] 
-        public decimal Preco { get; set; } = -1.00m;
+        [Column("PRECO", TypeName = "money")]
+        public decimal Preco { get; set; }
         [Column("ID_CATEGORIA")]
         public int IdCategoria { get; set; }
         [Column("ID_DESENVOLVEDORA")]
@@ -42,11 +43,10 @@ namespace EspamaGS_2._0.Models
         [StringLength(20)]
         [Unicode(false)]
         public string IdFuncionario { get; set; } = null!;
-
         [Column("DATA_REGISTO", TypeName = "datetime")]
-        public DateTime? DataRegisto { get; set; } = null!;
+        public DateTime DataRegisto { get; set; }
         [Column("DATA_LANCAMENTO", TypeName = "date")]
-        public DateTime? DataLancamento { get; set; } = null!;
+        public DateTime DataLancamento { get; set; }
 
         [ForeignKey("IdCategoria")]
         [InverseProperty("Jogos")]
@@ -60,6 +60,8 @@ namespace EspamaGS_2._0.Models
         [ForeignKey("IdPlataforma")]
         [InverseProperty("Jogos")]
         public virtual Plataforma IdPlataformaNavigation { get; set; } = null!;
+        [InverseProperty("IdJogoNavigation")]
+        public virtual ICollection<Cart> Carts { get; set; }
         [InverseProperty("IdJogoNavigation")]
         public virtual ICollection<Compra> Compras { get; set; }
     }

@@ -4,12 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace EspamaGS_2._0.Models
-{
-    public partial class Categoria
-    {
-        public Categoria()
-        {
+namespace EspamaGS_2._0.Models {
+    public partial class Categoria {
+        public Categoria() {
             Jogos = new HashSet<Jogo>();
             Preferencia = new HashSet<Preferencia>();
         }

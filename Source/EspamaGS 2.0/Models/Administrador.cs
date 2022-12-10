@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EspamaGS_2._0.Models
 {
     [Table("Administrador")]
+    [Index("IdAdmin", Name = "IX_Administrador_ID_ADMIN")]
     public partial class Administrador
     {
         public Administrador()

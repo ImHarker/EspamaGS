@@ -3,6 +3,13 @@
     ViewData["Title"] = "Jogo";
 }
 
+@if (TempData["msg"] != null) {
+	<div class="alert alert-success alert-dismissible fade show">
+		@TempData["msg"]
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
 <div class="jogo-container text-white bg-dark p-4 bg-opacity-75"> 
 	<h1 class="text-white mb-4">@Model.Nome</h1>
 	<div class="d-flex">
@@ -25,7 +32,7 @@
 				</div>
 				<div>
 					<a class="btn text-white btn-jogo p-3" href="#">Comprar agora</a>
-					<a class="btn text-white btn-jogo p-3" href="#">Adicionar ao Carrinho</a>
+					<a class="btn text-white btn-jogo p-3" asp-action="AddCarrinho" asp-route-id="@Model.Id">Adicionar ao Carrinho</a>
 				</div>
 			</div>
 		</div>

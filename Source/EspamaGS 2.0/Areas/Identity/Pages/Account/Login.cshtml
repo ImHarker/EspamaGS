@@ -45,7 +45,7 @@
                     <button type="submit">Login</button>
                 </div>
 	            <div class="create">
-		            Don't have an account? <a asp-area="Identity" asp-page="/Account/Register">Create an account</a>
+		            Don't have an account? <a asp-area="Identity" asp-page="/Account/Register" asp-route-returnurl="@Model.ReturnUrl">Create an account</a>
 	            </div>
 	            <div class="create">
 		            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>

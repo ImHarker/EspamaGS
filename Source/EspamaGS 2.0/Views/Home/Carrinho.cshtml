@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Cart>
+@{
+    ViewData["Title"] = "Carrinho";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["msg"] != null) {
+	<div class="alert alert-success alert-dismissible fade show">
+		@TempData["msg"]
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
+
+<div class="carrinho-container align-content-center mb-5 p-5 bg-dark bg-opacity-75">
+<h1 class="text-white mt-2 mb-5">Carrinho de Compras</h1>
+	@if (!Model.Any()) {
+	<h3 class="text-white p-4 pt-0 pb-2">O seu carrinho de compras está vazio!</h3>
+	}
+	@foreach (var item in Model) {
+		<!--TEMPLATE-->
+		<div class="card centerdiv bg-light bg-opacity-10 text-white p-3">
+			<div class="row">
+				<div class="col-sm-1 d-flex">
+					<img class="maxheight" src="/img/Jogos/@item.IdJogoNavigation.Foto" alt="">
+				</div>
+				<div class="col-sm-6 d-flex align-items-start">
+					<div class="card-block align-items-start">
+						<p class="m-0">@item.IdJogoNavigation.Nome</p>
+						<div class="d-flex">
+							<span class="badge rounded-pill bg-danger m-1 mb-2">@item.IdJogoNavigation.IdCategoriaNavigation.Nome</span>
+							<span class="badge rounded-pill bg-primary m-1 mb-2">@item.IdJogoNavigation.IdPlataformaNavigation.Nome</span>
+							<span class="badge rounded-pill bg-warning m-1 mb-2">@item.IdJogoNavigation.IdDesenvolvedoraNavigation.Nome</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-2 d-flex align-items-center justify-content-end">
+					<p class="m-0">@Decimal.Round(item.IdJogoNavigation.Preco, 2) €</p>
+				</div>
+				<div class="col-sm-1 d-flex align-items-center justify-content-end">
+					<a asp-action="DeleteCarrinho" asp-route-id="@item.Id" class="removefromcart">
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>				
+					</a>
+					</div>
+				</div>
+		</div>
+		<!-- FIM TEMPLATE-->
+	}
+</div>

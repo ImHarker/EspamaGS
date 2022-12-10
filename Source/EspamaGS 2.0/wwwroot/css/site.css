@@ -133,7 +133,6 @@ a, a:visited, a:hover, a:active {
 }
 
 .centerdiv {
-    margin-left: 5rem;
     padding: 10px;
 }
 
@@ -145,8 +144,8 @@ a, a:visited, a:hover, a:active {
 
 .maxheight {
     object-fit: cover;
-    height: 150px;
-    width: 75%;
+    height: 100px;
+    width: 100%;
 }
 
 .searchbar-container {
@@ -275,3 +274,13 @@ img[src="https://localhost:7251/favicon.ico"] {
     scrollbar-width: none; /* Firefox */
     /* ReSharper restore CssNotResolved */
 } 
+
+.carrinho-container {
+    border-radius: 25px;
+    padding-top: 1rem !important;
+}
+.remover-favorito {
+    color: red !important;
+    text-decoration: none;
+    font-weight: 600;
+}

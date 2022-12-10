@@ -13,9 +13,11 @@ namespace EspamaGS_2._0.Data {
         public EspamaGSContext(DbContextOptions<EspamaGSContext> options)
             : base(options) {
         }
+
         public virtual DbSet<Administrador> Administradors { get; set; } = null!;
-        public virtual DbSet<Categoria> Categoria { get; set; } = null!;
+        public virtual DbSet<Cart> Carts { get; set; } = null!;
         public virtual DbSet<Compra> Compras { get; set; } = null!;
+        public virtual DbSet<Categoria> Categoria { get; set; } = null!;
         public virtual DbSet<Desenvolvedora> Desenvolvedoras { get; set; } = null!;
         public virtual DbSet<Funcionario> Funcionarios { get; set; } = null!;
         public virtual DbSet<Jogo> Jogos { get; set; } = null!;
@@ -24,7 +26,7 @@ namespace EspamaGS_2._0.Data {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             if (!optionsBuilder.IsConfigured) {
-                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EspamaGS;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=EspamaGS;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
 
@@ -38,6 +40,15 @@ namespace EspamaGS_2._0.Data {
                     .HasForeignKey(d => d.IdAdmin)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Administr__ID_AD__1332DBDC");
+            });
+
+
+            modelBuilder.Entity<Cart>(entity => {
+                entity.HasOne(d => d.IdJogoNavigation)
+                    .WithMany(p => p.Carts)
+                    .HasForeignKey(d => d.IdJogo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Cart__IdJogo__160F4887");
             });
 
             modelBuilder.Entity<Compra>(entity => {
@@ -98,9 +109,7 @@ namespace EspamaGS_2._0.Data {
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Preferenc__ID_CA__1EA48E88");
             });
-
             base.OnModelCreating(modelBuilder);
-
             OnModelCreatingPartial(modelBuilder);
         }
 

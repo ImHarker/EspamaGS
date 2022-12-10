@@ -4,10 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace EspamaGS_2._0.Models
-{
-    public partial class Preferencia
-    {
+namespace EspamaGS_2._0.Models {
+    [Index("IdCategoria", Name = "IX_Preferencia_ID_CATEGORIA")]
+    public partial class Preferencia {
         [Key]
         [Column("ID_CLIENTE")]
         [StringLength(20)]

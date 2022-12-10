@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EspamaGS_2._0.Models
 {
     [Table("Funcionario")]
+    [Index("IdAdmin", Name = "IX_Funcionario_ID_ADMIN")]
     public partial class Funcionario
     {
         public Funcionario()
@@ -14,15 +15,15 @@ namespace EspamaGS_2._0.Models
             Jogos = new HashSet<Jogo>();
         }
 
-        [Column("TELEFONE")]
-        [StringLength(9)]
-        [Unicode(false)]
-        public string Telefone { get; set; } = null!;
         [Key]
         [Column("ID_UTILIZADOR")]
         [StringLength(20)]
         [Unicode(false)]
         public string IdUtilizador { get; set; } = null!;
+        [Column("TELEFONE")]
+        [StringLength(9)]
+        [Unicode(false)]
+        public string Telefone { get; set; } = null!;
         [Column("ID_ADMIN")]
         [StringLength(20)]
         [Unicode(false)]

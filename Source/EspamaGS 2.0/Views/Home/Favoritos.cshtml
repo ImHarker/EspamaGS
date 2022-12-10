@@ -11,13 +11,14 @@
 
 <h2 class="mb-2">Categorias Selecionadas</h2>
 @if (!Model.Any()) {
-	<p>Não tem nenhuma categoria preferida</p>
+	<h5>Não tem nenhuma categoria preferida</h5>
 } else {
 	<ul>
 
 @foreach (var item in Model) {
 		<li>
 			@item.IdCategoriaNavigation.Nome
+			<a class="remover-favorito" asp-action="DeleteFavorito" asp-route-id="@item.IdCategoria">&times;</a>
 		</li>
 }
 	</ul>

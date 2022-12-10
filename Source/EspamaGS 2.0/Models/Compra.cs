@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EspamaGS_2._0.Models
 {
     [Table("Compra")]
+    [Index("IdJogo", Name = "IX_Compra_ID_JOGO")]
     public partial class Compra
     {
         [Key]

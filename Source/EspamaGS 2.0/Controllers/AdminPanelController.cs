@@ -27,11 +27,11 @@ namespace EspamaGS_2._0.Controllers {
             return View();
         }
         public IActionResult LogsJogos() {
-            return View(_context.Jogos.Include(c=>c.IdFuncionarioNavigation).ToList());
+            return View(_context.Jogos.Include(c => c.IdFuncionarioNavigation).ToList());
         }
         [Authorize(Roles = "Admin")]
         public IActionResult LogsFuncionarios() {
-            return View(_context.Funcionarios.Include(c=> c.IdAdminNavigation).ToList());
+            return View(_context.Funcionarios.Include(c => c.IdAdminNavigation).ToList());
         }
         [Authorize(Roles = "Admin")]
         public IActionResult AddFuncionarios() {
@@ -49,7 +49,7 @@ namespace EspamaGS_2._0.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> AddCategoria(Categoria c) {
-            if(_context.Categoria.Any(x=>x.Nome == c.Nome)) return RedirectToAction(nameof(AddCategoria));
+            if (_context.Categoria.Any(x => x.Nome == c.Nome)) return RedirectToAction(nameof(AddCategoria));
             _context.Categoria.Add(c);
             await _context.SaveChangesAsync();
             TempData["msg"] = "A categoria '" + c.Nome + "' foi inserida com sucesso!";

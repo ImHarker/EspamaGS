@@ -55,7 +55,7 @@
                     <button type="submit">Register</button>
                 </div>
                 <div class="create">
-                    Already have an account? <a asp-area="Identity" asp-page="/Account/Login">Log in to your account</a>
+                    Already have an account? <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnurl="@Model.ReturnUrl">Log in to your account</a>
                 </div>
                 <div class="create">
                     Wanna go back to the shop? <a asp-area="" asp-controller="Home" asp-action="Index">Click Here</a>
