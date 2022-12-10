@@ -28,7 +28,7 @@
 		<h2 class="mb-2 mt-2">Adicionar Categoria</h2>
 		<h5 class="p-2">Duplo clique para adicionar</h5>
 		<form asp-action="Favoritos"  method="post">
-			<select name="id" class="favoritos-select form-control form-select" onclick="this.form.submit()" size="10" asp-items='new SelectList(ViewBag.Categorias, "Id", "Nome")'></select>
+			<select name="id" class="favoritos-select form-control form-select bg-dark text-white" ondblclick="this.form.submit()" size="10" asp-items='new SelectList(ViewBag.Categorias, "Id", "Nome")'></select>
 		</form>
 	</div>
 </div>

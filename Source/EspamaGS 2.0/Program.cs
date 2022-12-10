@@ -1,5 +1,7 @@
 using EspamaGS_2._0.Data;
+using EspamaGS_2._0.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +29,16 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => {
 
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IEmailSender, EmailSender>(i =>
+    new EmailSender(
+        builder.Configuration["EmailSender:Host"],
+        builder.Configuration.GetValue<int>("EmailSender:Port"),
+        builder.Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+        builder.Configuration["EmailSender:UserName"],
+        builder.Configuration["EmailSender:Password"]
+    )
+);
 
 var app = builder.Build();
 
