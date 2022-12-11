@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using EspamaGS_2._0.Data;
+using EspamaGS_2._0.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -83,7 +84,7 @@ namespace EspamaGS_2._0.Controllers {
         public async Task<IActionResult> DeleteCarrinho(int? id) {
             if (id == null) return RedirectToAction(nameof(Index));
             Cart? cartitem;
-            if ((cartitem = _context.Carts.FirstOrDefault(c=> c.Id == id)) == null) return RedirectToAction(nameof(Carrinho));
+            if ((cartitem = _context.Carts.FirstOrDefault(c => c.Id == id)) == null) return RedirectToAction(nameof(Carrinho));
             _context.Carts.Remove(cartitem);
             await _context.SaveChangesAsync();
             TempData["cartitems"] = _context.Carts.Count(c => c.IdCliente == User.Identity!.Name);

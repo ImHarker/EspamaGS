@@ -139,12 +139,25 @@ a, a:visited, a:hover, a:active {
     margin-bottom: 30px;
 
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#descJogo::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#descJogo {
+    -ms-overflow-style: none; /* IE and Edge */
+    /* ReSharper disable CssNotResolved */
+    scrollbar-width: none; /* Firefox */
+    /* ReSharper restore CssNotResolved */
+} 
+
 #descJogo {
     resize: none;
     outline: none;
     border: none;
     background: none;
-    overflow: hidden;
 }
 .remember-container{
     padding-bottom: 1rem;

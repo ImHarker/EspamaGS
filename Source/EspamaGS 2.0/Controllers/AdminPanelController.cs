@@ -1,9 +1,12 @@
 ﻿using EspamaGS_2._0.Data;
 using EspamaGS_2._0.Models;
+using EspamaGS_2._0.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Encodings.Web;
 
 namespace EspamaGS_2._0.Controllers {
     [Authorize(Roles = "Admin, Funcionario")]
@@ -11,10 +14,12 @@ namespace EspamaGS_2._0.Controllers {
         private readonly EspamaGSContext _context;
         private readonly IHostEnvironment _he;
         private readonly UserManager<IdentityUser> _userManager;
-        public AdminPanelController(EspamaGSContext context, IHostEnvironment he, UserManager<IdentityUser> userManager) {
+        private readonly IEmailSender _emailSender;
+        public AdminPanelController(EspamaGSContext context, IHostEnvironment he, UserManager<IdentityUser> userManager, IEmailSender emailSender) {
             _context = context;
             _he = he;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
 
@@ -116,6 +121,13 @@ namespace EspamaGS_2._0.Controllers {
             foto.CopyTo(fs);
             fs.Close();
             TempData["msg"] = "O jogo '" + jogo.Nome + "' foi inserido com sucesso!";
+            foreach (var user in _userManager.Users) {
+                if (_context.Preferencia.Any(c => user.UserName == c.IdCliente && c.IdCategoria == jogo.IdCategoria)) {
+                    var callbackUrl = Url.ActionLink("Jogo", "Home", values: new { id = jogo.Id });
+                    await _emailSender.SendEmailAsync(user.Email, "Novo Jogo numa Categoria Preferida", $"O jogo '{jogo.Nome}' foi adicionado e está numa das suas categorias preferidas.\nPode ser visitado aqui: <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>{jogo.Nome}</a>");
+                }
+            }
+
             return RedirectToAction(nameof(AddJogo));
         }
 

@@ -28,7 +28,7 @@ namespace EspamaGS_2._0.Models {
         [Unicode(false)]
         public string Foto { get; set; } = null!;
         [Column("DESCRICAO")]
-        [StringLength(255)]
+        [StringLength(1024)]
         [Unicode(false)]
         public string Descricao { get; set; } = null!;
         [Column("PRECO", TypeName = "money")]
