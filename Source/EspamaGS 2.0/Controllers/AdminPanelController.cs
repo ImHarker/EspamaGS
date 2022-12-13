@@ -106,10 +106,13 @@ namespace EspamaGS_2._0.Controllers {
             if (jogo.Descricao == null) return RedirectToAction(nameof(AddJogo));
             if (jogo.Preco == -1) return RedirectToAction(nameof(AddJogo));
             if (jogo.DataLancamento == null) return RedirectToAction(nameof(AddJogo));
+            if (jogo.IdCategoria == 0) return RedirectToAction(nameof(AddJogo));
+            if (jogo.IdPlataforma == 0) return RedirectToAction(nameof(AddJogo));
+            if (jogo.IdDesenvolvedora == 0) return RedirectToAction(nameof(AddJogo));
             jogo.Foto = "";
+            jogo.IdFuncionario = User.Identity!.Name!;
             string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/");
             Directory.CreateDirectory(dest);
-            jogo.IdFuncionario = User.Identity!.Name!;
             jogo.DataRegisto = DateTime.Now;
             _context.Jogos.Add(jogo);
             await _context.SaveChangesAsync();

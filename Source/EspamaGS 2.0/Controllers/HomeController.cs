@@ -35,7 +35,7 @@ namespace EspamaGS_2._0.Controllers {
             ViewData["Categorias"] = _context.Categoria.Where(x => categoriasEscolhidas.FirstOrDefault(c => x.Id == c.IdCategoriaNavigation.Id) == null);
             return View(categoriasEscolhidas.ToList());
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> Favoritos(int? id) {
             if (id == null) return RedirectToAction(nameof(Favoritos));
@@ -62,7 +62,7 @@ namespace EspamaGS_2._0.Controllers {
 
             return View();
         }
-
+        
 
         public IActionResult Carrinho() {
             return View(_context.Carts.Include(c => c.IdJogoNavigation).Include(c => c.IdJogoNavigation.IdCategoriaNavigation).Include(c => c.IdJogoNavigation.IdDesenvolvedoraNavigation).Include(c => c.IdJogoNavigation.IdPlataformaNavigation).Where(c => c.IdCliente == User.Identity!.Name).ToList());
@@ -90,6 +90,32 @@ namespace EspamaGS_2._0.Controllers {
             TempData["cartitems"] = _context.Carts.Count(c => c.IdCliente == User.Identity!.Name);
             TempData["msg"] = "Removido do carrinho com sucesso!";
             return RedirectToAction(nameof(Carrinho));
+        }
+
+        public async Task<IActionResult> Checkout() {
+            var items = new List<Compra>();
+            var cartitems = _context.Carts.Where(c => c.IdCliente == User.Identity!.Name).Include(c=> c.IdJogoNavigation).ToList();
+            if(!cartitems.Any()) return RedirectToAction(nameof(Carrinho));
+            foreach (var item in cartitems ) {
+                var compra = new Compra {
+                    DataCompra = DateTime.Now,
+                    Preco = item.IdJogoNavigation.Preco,
+                    IdCliente = item.IdCliente,
+                    IdJogo = item.IdJogoNavigation.Id,
+                    Key = GameKeyGenerator.GenerateKey()
+                };
+                items.Add(compra);
+                _context.Carts.Remove(item);
+            }
+            _context.Compras.AddRange(items);
+            await _context.SaveChangesAsync();
+            TempData["cartitems"] = _context.Carts.Count(c => c.IdCliente == User.Identity!.Name);
+            return RedirectToAction(nameof(Compras));
+        }
+
+        public IActionResult Compras() {
+
+            return View(_context.Compras.Where(c => c.IdCliente == User.Identity!.Name).Include(c=> c.IdJogoNavigation).Include(c=> c.IdJogoNavigation.IdCategoriaNavigation).Include(c=>c.IdJogoNavigation.IdDesenvolvedoraNavigation).Include(c=>c.IdJogoNavigation.IdPlataformaNavigation).OrderByDescending(c => c.DataCompra).ToList());
         }
 
         [AllowAnonymous]

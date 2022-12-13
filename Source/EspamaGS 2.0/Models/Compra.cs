@@ -11,11 +11,16 @@ namespace EspamaGS_2._0.Models
     public partial class Compra
     {
         [Key]
+        [Column("ID")]
+        public int Id { get; set; }
         [Column("ID_CLIENTE")]
         [StringLength(20)]
         [Unicode(false)]
         public string IdCliente { get; set; } = null!;
-        [Key]
+        [Column("KEY_JOGO")]
+        [StringLength(18)]
+        [Unicode(false)]
+        public string Key { get; set; } = null!;
         [Column("ID_JOGO")]
         public int IdJogo { get; set; }
         [Column("DATA_COMPRA", TypeName = "datetime")]

@@ -284,3 +284,12 @@ img[src="https://localhost:7251/favicon.ico"] {
     text-decoration: none;
     font-weight: 600;
 }
+.date-compra {
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.date-compra p {
+    color: #bebebe !important;
+}

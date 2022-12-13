@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EspamaGS_2._0.Data.Migrations
 {
     [DbContext(typeof(EspamaGSContext))]
-    [Migration("20221203035353_NewDB")]
-    partial class NewDB
+    [Migration("20221212221445_DbNova")]
+    partial class DbNova
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,9 +46,33 @@ namespace EspamaGS_2._0.Data.Migrations
                     b.HasKey("IdUtilizador")
                         .HasName("PK__Administ__7BC3137CC20F3687");
 
-                    b.HasIndex("IdAdmin");
+                    b.HasIndex(new[] { "IdAdmin" }, "IX_Administrador_ID_ADMIN");
 
                     b.ToTable("Administrador");
+                });
+
+            modelBuilder.Entity("EspamaGS_2._0.Models.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("IdCliente")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<int>("IdJogo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdJogo");
+
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("EspamaGS_2._0.Models.Categoria", b =>
@@ -88,6 +112,17 @@ namespace EspamaGS_2._0.Data.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("DATA_COMPRA");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(18)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(18)")
+                        .HasColumnName("KEY_JOGO");
+
                     b.Property<decimal>("Preco")
                         .HasColumnType("money")
                         .HasColumnName("PRECO");
@@ -95,7 +130,7 @@ namespace EspamaGS_2._0.Data.Migrations
                     b.HasKey("IdCliente", "IdJogo")
                         .HasName("PK__Compra__6B235F1E45A1618F");
 
-                    b.HasIndex("IdJogo");
+                    b.HasIndex(new[] { "IdJogo" }, "IX_Compra_ID_JOGO");
 
                     b.ToTable("Compra");
                 });
@@ -150,7 +185,7 @@ namespace EspamaGS_2._0.Data.Migrations
                     b.HasKey("IdUtilizador")
                         .HasName("PK__Funciona__7BC3137C400E1255");
 
-                    b.HasIndex("IdAdmin");
+                    b.HasIndex(new[] { "IdAdmin" }, "IX_Funcionario_ID_ADMIN");
 
                     b.ToTable("Funcionario");
                 });
@@ -174,9 +209,9 @@ namespace EspamaGS_2._0.Data.Migrations
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasMaxLength(255)
+                        .HasMaxLength(1024)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("varchar(1024)")
                         .HasColumnName("DESCRICAO");
 
                     b.Property<string>("Foto")
@@ -218,13 +253,13 @@ namespace EspamaGS_2._0.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdCategoria");
+                    b.HasIndex(new[] { "IdCategoria" }, "IX_Jogo_ID_CATEGORIA");
 
-                    b.HasIndex("IdDesenvolvedora");
+                    b.HasIndex(new[] { "IdDesenvolvedora" }, "IX_Jogo_ID_DESENVOLVEDORA");
 
-                    b.HasIndex("IdFuncionario");
+                    b.HasIndex(new[] { "IdFuncionario" }, "IX_Jogo_ID_FUNCIONARIO");
 
-                    b.HasIndex("IdPlataforma");
+                    b.HasIndex(new[] { "IdPlataforma" }, "IX_Jogo_ID_PLATAFORMA");
 
                     b.ToTable("Jogo");
                 });
@@ -265,7 +300,7 @@ namespace EspamaGS_2._0.Data.Migrations
                     b.HasKey("IdCliente", "IdCategoria")
                         .HasName("PK__Preferen__671E10CADF476741");
 
-                    b.HasIndex("IdCategoria");
+                    b.HasIndex(new[] { "IdCategoria" }, "IX_Preferencia_ID_CATEGORIA");
 
                     b.ToTable("Preferencia");
                 });
@@ -483,6 +518,17 @@ namespace EspamaGS_2._0.Data.Migrations
                     b.Navigation("IdAdminNavigation");
                 });
 
+            modelBuilder.Entity("EspamaGS_2._0.Models.Cart", b =>
+                {
+                    b.HasOne("EspamaGS_2._0.Models.Jogo", "IdJogoNavigation")
+                        .WithMany("Carts")
+                        .HasForeignKey("IdJogo")
+                        .IsRequired()
+                        .HasConstraintName("FK__Cart__IdJogo__160F4887");
+
+                    b.Navigation("IdJogoNavigation");
+                });
+
             modelBuilder.Entity("EspamaGS_2._0.Models.Compra", b =>
                 {
                     b.HasOne("EspamaGS_2._0.Models.Jogo", "IdJogoNavigation")
@@ -628,6 +674,8 @@ namespace EspamaGS_2._0.Data.Migrations
 
             modelBuilder.Entity("EspamaGS_2._0.Models.Jogo", b =>
                 {
+                    b.Navigation("Carts");
+
                     b.Navigation("Compras");
                 });
 

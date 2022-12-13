@@ -52,7 +52,7 @@ namespace EspamaGS_2._0.Data {
             });
 
             modelBuilder.Entity<Compra>(entity => {
-                entity.HasKey(e => new { e.IdCliente, e.IdJogo })
+                entity.HasKey(e => new { e.Id })
                     .HasName("PK__Compra__6B235F1E45A1618F");
 
                 entity.HasOne(d => d.IdJogoNavigation)

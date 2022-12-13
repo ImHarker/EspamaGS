@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EspamaGS_2._0.Data.Migrations
 {
-    public partial class NewDB : Migration
+    public partial class DbNova : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -110,7 +110,7 @@ namespace EspamaGS_2._0.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NOME = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     FOTO = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    DESCRICAO = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
+                    DESCRICAO = table.Column<string>(type: "varchar(1024)", unicode: false, maxLength: 1024, nullable: false),
                     PRECO = table.Column<decimal>(type: "money", nullable: false),
                     ID_CATEGORIA = table.Column<int>(type: "int", nullable: false),
                     ID_DESENVOLVEDORA = table.Column<int>(type: "int", nullable: false),
@@ -145,17 +145,38 @@ namespace EspamaGS_2._0.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cart",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdJogo = table.Column<int>(type: "int", nullable: false),
+                    IdCliente = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cart", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK__Cart__IdJogo__160F4887",
+                        column: x => x.IdJogo,
+                        principalTable: "Jogo",
+                        principalColumn: "ID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Compra",
                 columns: table => new
                 {
                     ID_CLIENTE = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     ID_JOGO = table.Column<int>(type: "int", nullable: false),
+                    ID = table.Column<int>(type: "int", nullable: false).Annotation("SqlServer:Identity", "1, 1"),
+                    KEY_JOGO = table.Column<string>(type: "varchar(18)", unicode: false, maxLength: 18, nullable: false),
                     DATA_COMPRA = table.Column<DateTime>(type: "datetime", nullable: false),
                     PRECO = table.Column<decimal>(type: "money", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Compra__6B235F1E45A1618F", x => new { x.ID_CLIENTE, x.ID_JOGO });
+                    table.PrimaryKey("PK__Compra__6B235F1E45A1618F", x => new { x.ID });
                     table.ForeignKey(
                         name: "FK__Compra__ID_JOGO__2180FB33",
                         column: x => x.ID_JOGO,
@@ -167,6 +188,11 @@ namespace EspamaGS_2._0.Data.Migrations
                 name: "IX_Administrador_ID_ADMIN",
                 table: "Administrador",
                 column: "ID_ADMIN");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cart_IdJogo",
+                table: "Cart",
+                column: "IdJogo");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Compra_ID_JOGO",
@@ -206,6 +232,9 @@ namespace EspamaGS_2._0.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Cart");
+
             migrationBuilder.DropTable(
                 name: "Compra");
 

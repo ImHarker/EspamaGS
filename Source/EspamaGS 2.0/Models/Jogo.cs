@@ -50,19 +50,19 @@ namespace EspamaGS_2._0.Models {
 
         [ForeignKey("IdCategoria")]
         [InverseProperty("Jogos")]
-        public virtual Categoria IdCategoriaNavigation { get; set; } = null!;
+        public virtual Categoria? IdCategoriaNavigation { get; set; } = null!;
         [ForeignKey("IdDesenvolvedora")]
         [InverseProperty("Jogos")]
-        public virtual Desenvolvedora IdDesenvolvedoraNavigation { get; set; } = null!;
+        public virtual Desenvolvedora? IdDesenvolvedoraNavigation { get; set; } = null!;
         [ForeignKey("IdFuncionario")]
         [InverseProperty("Jogos")]
-        public virtual Funcionario IdFuncionarioNavigation { get; set; } = null!;
+        public virtual Funcionario? IdFuncionarioNavigation { get; set; } = null!;
         [ForeignKey("IdPlataforma")]
         [InverseProperty("Jogos")]
-        public virtual Plataforma IdPlataformaNavigation { get; set; } = null!;
+        public virtual Plataforma? IdPlataformaNavigation { get; set; } = null!;
         [InverseProperty("IdJogoNavigation")]
-        public virtual ICollection<Cart> Carts { get; set; }
+        public virtual ICollection<Cart>? Carts { get; set; }
         [InverseProperty("IdJogoNavigation")]
-        public virtual ICollection<Compra> Compras { get; set; }
+        public virtual ICollection<Compra>? Compras { get; set; }
     }
 }

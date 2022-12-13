@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Compra>
+@{
+    ViewData["Title"] = "Histórico de Compras";
+}
+
+@if (TempData["msg"] != null) {
+	<div class="alert alert-success alert-dismissible fade show">
+		@TempData["msg"]
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
+
+<div class="carrinho-container align-content-center mb-5 p-5 bg-dark bg-opacity-75">
+<h1 class="text-white mt-2 mb-5">Histórico de Compras</h1>
+	@if (!Model.Any()) {
+		<h3 class="text-white p-4 pt-0 pb-2">Ainda não fez nenhuma compra!</h3>
+	} else {
+	<div class="text-white d-flex align-items-center justify-content-start">
+		<h4 class="col-sm-2 p-3 pb-0 pt-0">@Model.Count() Item(s)</h4>
+	</div>
+		@foreach (var item in Model) {
+			<!--TEMPLATE-->
+			<div class="card centerdiv bg-light bg-opacity-10 text-white p-3">
+				<div class="row">
+					<div class="date-compra col-sm-2 text-center">
+						<p class="text-white m-0">@item.DataCompra.ToString().Split().First()</p>
+						<p class="text-white m-0">@item.DataCompra.ToString().Split().Last()</p>
+					</div>
+					<div class="col-sm-1 d-flex">
+						<img class="maxheight" src="/img/Jogos/@item.IdJogoNavigation.Foto" alt="">
+					</div>
+					<div class="col-sm-4 d-flex align-items-start">
+						<div class="card-block align-items-start">
+							<p class="m-0">@item.IdJogoNavigation.Nome</p>
+							<div class="d-flex">
+								<span class="badge rounded-pill bg-danger m-1 mb-2">@item.IdJogoNavigation.IdCategoriaNavigation.Nome</span>
+								<span class="badge rounded-pill bg-primary m-1 mb-2">@item.IdJogoNavigation.IdPlataformaNavigation.Nome</span>
+								<span class="badge rounded-pill bg-warning m-1 mb-2">@item.IdJogoNavigation.IdDesenvolvedoraNavigation.Nome</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-3 d-flex align-items-center justify-content-end">
+						<p class="m-0">@item.Key</p>
+					</div>
+					<div class="col-sm-2 d-flex align-items-center justify-content-end">
+						<p class="m-0">@Decimal.Round(item.IdJogoNavigation.Preco, 2) €</p>
+					</div>
+				</div>
+			</div>
+			<!-- FIM TEMPLATE-->
+		}
+	}
+</div>
+
