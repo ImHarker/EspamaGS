@@ -1,4 +1,4 @@
-﻿@model EspamaGS_2._0.Areas.Identity.Pages.Account.RegisterModel
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
 @{
     ViewData["Title"] = "AddFuncionarios";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -7,37 +7,34 @@
 @section AddToHead{
 	<link href="@Url.Content("~/css/admin.css")" rel="stylesheet" type="text/css" />
 }
+@if (TempData["msg"] != null) {
+	<div class="alert alert-success alert-dismissible fade show">
+		@TempData["msg"]
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
 
 <div class="add-card-container pb-3 mb-5">
-	<form asp-action="AddFuncionarios">
+	<form onsubmit="return onSubmitNewFunc(this);" asp-action="AddFuncionarios" method="post">
 		<div class="login-card m-5">			
 			<div>
 				<h1 class="AddText">Adicionar Funcionários</h1>
 			</div>
 			<div>
-				<label asp-for="Input.Email">Username</label>
-				<br>
-				<input asp-for="Input.Email" type="text" placeholder="Enter Username">
+				<label>Username</label>
+				<select id="UserFunc" name="id" class="funcionario-select form-control form-select" size="10" asp-items='new SelectList(Model, "UserName", "UserName")'></select>
+			</div>
+			<div class="hideme">
+				<label>Telefone</label>
+				<br/>
+				<input name="tlf" class="form-control form-select" type="text"/>
 			</div>
 			<div>
-				<label asp-for="Input.Email">Nome</label>
-				<br>
-				<input asp-for="Input.Email" type="text" placeholder="Enter Name">
-			</div>
-			<div>
-				<label asp-for="Input.Email">Email</label>
-				<br>
-				<input asp-for="Input.Email" type="text" placeholder="Enter Email">
-			</div>
-			<div>
-				<label asp-for="Input.Password">Password</label>
-				<br>
-				<input asp-for="Input.Password" type="password" placeholder="Enter Password">
-			</div>
-			<div>
-				<label asp-for="Input.ConfirmPassword">Confirmar Password</label>
-				<br>
-				<input asp-for="Input.ConfirmPassword" type="password" placeholder="Enter Password">
+				<label>Tipo de Funcionário</label>
+				<select id="TipoFunc" name="tipo" class="form-control form-select">
+					<option value="1">Funcionário</option>
+					<option value="2">Administrador</option>
+				</select>
 			</div>
 			<div>
 				<button type="submit">Adicionar</button>

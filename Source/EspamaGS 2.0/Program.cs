@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using EspamaGS_2._0.Data;
 using EspamaGS_2._0.Services;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,13 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<EspamaGSContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddMvc()
+    .AddJsonOptions(options => {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.IncludeFields = true;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => {
     options.SignIn.RequireConfirmedAccount = true;

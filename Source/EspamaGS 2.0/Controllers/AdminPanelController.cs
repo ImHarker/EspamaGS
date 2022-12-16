@@ -29,29 +29,75 @@ namespace EspamaGS_2._0.Controllers {
         }
 
         public IActionResult LogsCompras() {
-            return View();
+            return View(_context.Compras.Include(c=> c.IdJogoNavigation).ToList());
         }
         public IActionResult LogsJogos() {
             return View(_context.Jogos.Include(c => c.IdFuncionarioNavigation).ToList());
         }
         [Authorize(Roles = "Admin")]
         public IActionResult LogsFuncionarios() {
-            return View(_context.Funcionarios.Include(c => c.IdAdminNavigation).ToList());
-        }
-        [Authorize(Roles = "Admin")]
-        public IActionResult AddFuncionarios() {
-            return View();
-        }
-        [Authorize(Roles = "Admin")]
-        public IActionResult AddAdmins() {
+            ViewData["Funcionarios"] = _context.Funcionarios.Include(c => c.IdAdminNavigation).ToList();
+            ViewData["Admin"] = _context.Administradors.Include(c => c.IdAdminNavigation).ToList();
+            
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> AddFuncionarios(string? id, int? tipo, string? tlf) {
+            if (id == null) return RedirectToAction(nameof(AddFuncionarios));
+            if (tipo is not (1 or 2)) return RedirectToAction(nameof(AddFuncionarios));
+            if(tipo== 1 && tlf == null) return RedirectToAction(nameof(AddFuncionarios));
+
+            var user =  _userManager.Users.FirstOrDefault(c => c.UserName == id);
+            if(user == null) return RedirectToAction(nameof(AddFuncionarios));
+            if (_userManager.IsInRoleAsync(user, "Admin").Result || _userManager.IsInRoleAsync(user, "Funcionario").Result)
+                return RedirectToAction(nameof(AddFuncionarios));
+
+            if (tipo == 1) {
+                await _userManager.AddToRoleAsync(user, "Funcionario");
+                _context.Funcionarios.Add(new Funcionario {
+                    DataRegisto = DateTime.Now,
+                    IdAdmin = User.Identity!.Name!,
+                    IdUtilizador = user.UserName,
+                    Telefone = tlf!
+                });
+                await _context.SaveChangesAsync();
+                TempData["msg"] = "O Utilizador '" + id + "' foi promovido a 'Funcionário'!";
+            }
+
+            if (tipo == 2) {
+                await _userManager.AddToRoleAsync(user, "Admin");
+                _context.Administradors.Add(new Administrador {
+                    DataRegisto = DateTime.Now,
+                    IdAdmin = User.Identity!.Name!,
+                    IdUtilizador = user.UserName
+                });
+                await _context.SaveChangesAsync();
+                TempData["msg"] = "O Utilizador '" + id + "' foi promovido a 'Administrador'!";
+            }
+
+
+            return RedirectToAction(nameof(AddFuncionarios));
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult AddFuncionarios() {
+            var funcionarios = _context.Funcionarios;
+            var administradores = _context.Administradors;
+            var users = _userManager.Users.Where(x => funcionarios.FirstOrDefault(c=> x.UserName == c.IdUtilizador)  == null).Where(x=> administradores.FirstOrDefault(c => x.UserName == c.IdUtilizador) == null).ToList();
+
+
+            return View(users);
+        }
+
+        [Authorize(Roles = "Funcionario")]
 
         public IActionResult AddCategoria() {
             return View();
         }
 
+        [Authorize(Roles = "Funcionario")]
         [HttpPost]
         public async Task<IActionResult> AddCategoria(Categoria c) {
             if (_context.Categoria.Any(x => x.Nome == c.Nome)) return RedirectToAction(nameof(AddCategoria));
@@ -62,9 +108,12 @@ namespace EspamaGS_2._0.Controllers {
             return RedirectToAction(nameof(AddCategoria));
         }
 
+        [Authorize(Roles = "Funcionario")]
         public IActionResult AddPlataforma() {
             return View();
         }
+
+        [Authorize(Roles = "Funcionario")]
         [HttpPost]
         public async Task<IActionResult> AddPlataforma(Plataforma p) {
             if (_context.Plataformas.Any(x => x.Nome == p.Nome)) return RedirectToAction(nameof(AddPlataforma));
@@ -76,9 +125,12 @@ namespace EspamaGS_2._0.Controllers {
             return RedirectToAction(nameof(AddPlataforma));
         }
 
+        [Authorize(Roles = "Funcionario")]
         public IActionResult AddDesenvolvedora() {
             return View();
         }
+
+        [Authorize(Roles = "Funcionario")]
         [HttpPost]
         public async Task<IActionResult> AddDesenvolvedora(Desenvolvedora d) {
             if (_context.Desenvolvedoras.Any(x => x.Nome == d.Nome)) return RedirectToAction(nameof(AddDesenvolvedora));
@@ -90,7 +142,7 @@ namespace EspamaGS_2._0.Controllers {
             return RedirectToAction(nameof(AddDesenvolvedora));
         }
 
-
+        [Authorize(Roles = "Funcionario")]
         public IActionResult AddJogo() {
             ViewData["Categorias"] = _context.Categoria.ToList();
             ViewData["Plataformas"] = _context.Plataformas.ToList();
@@ -99,6 +151,8 @@ namespace EspamaGS_2._0.Controllers {
 
             return View();
         }
+
+        [Authorize(Roles = "Funcionario")]
         [HttpPost]
         public async Task<IActionResult> AddJogo(Jogo jogo, IFormFile foto) {
             if (foto == null) return RedirectToAction(nameof(AddJogo));

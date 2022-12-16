@@ -293,3 +293,25 @@ img[src="https://localhost:7251/favicon.ico"] {
 .date-compra p {
     color: #bebebe !important;
 }
+
+.funcionario-select {
+    width: 30%;
+    font-size: 1.5rem;
+    border: 1px solid #bebebe;
+    border-radius: 20px;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.funcionario-select::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.funcionario-select {
+    -ms-overflow-style: none; /* IE and Edge */
+    /* ReSharper disable CssNotResolved */
+    scrollbar-width: none; /* Firefox */
+    /* ReSharper restore CssNotResolved */
+} 

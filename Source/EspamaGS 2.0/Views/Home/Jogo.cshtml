@@ -31,7 +31,7 @@
 					<p class="preco-jogo">@Decimal.Round(Model.Preco, 2)€</p>
 				</div>
 				<div>
-					<a class="btn text-white btn-jogo p-3" href="#">Comprar agora</a>
+					<a class="btn text-white btn-jogo p-3" asp-action="BuyNow" asp-route-id="@Model.Id">Comprar agora</a>
 					<a class="btn text-white btn-jogo p-3" asp-action="AddCarrinho" asp-route-id="@Model.Id">Adicionar ao Carrinho</a>
 				</div>
 			</div>

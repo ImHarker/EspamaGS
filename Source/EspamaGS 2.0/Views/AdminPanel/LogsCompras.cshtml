@@ -1,4 +1,4 @@
-﻿	
+﻿@model IEnumerable<Compra>	
 @{
     ViewData["Title"] = "LogsCompras";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -9,30 +9,24 @@
 <table class="table table-bordered table-hover table-dark">
 	<thead>
 	<tr>
-		<th scope="col">ID</th>
-		<th scope="col">Username</th>
+		<th scope="col">Data</th>
+		<th scope="col">Cliente</th>
 		<th scope="col">ID Jogo</th>
 		<th scope="col">Jogo</th>
 		<th scope="col">Preço</th>
-		<th scope="col">Data</th>
+		<th scope="col">Key</th>
 	</tr>
 	</thead>
 	<tbody>
-	<tr>
-		<th scope="row">1</th>
-		<td>EspamaMaster</td>
-		<td>1</td>
-		<td>Grand Theft Auto V</td>
-		<td>70.00 €</td>
-		<td>01/11/2022</td>
-	</tr>
-	<tr>
-		<th scope="row">1</th>
-		<td>EspamaMaster</td>
-		<td>1</td>
-		<td>Grand Theft Auto V</td>
-		<td>70.00 €</td>
-		<td>01/11/2022</td>
-	</tr>
+	@foreach (var item in Model) {
+		<tr>
+			<td>@item.DataCompra</td>
+			<td>@item.IdCliente</td>
+			<td>@item.IdJogoNavigation.Id</td>
+			<td>@item.IdJogoNavigation.Nome</td>
+			<td>@Decimal.Round(item.IdJogoNavigation.Preco,2) €</td>
+			<td>@item.Key</td>
+		</tr>
+	}
 	</tbody>
 </table>

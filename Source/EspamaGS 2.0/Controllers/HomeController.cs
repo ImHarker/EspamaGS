@@ -19,6 +19,13 @@ namespace EspamaGS_2._0.Controllers {
             _context = context;
             _signInManager = signInManager;
         }
+
+        [AllowAnonymous]
+        public IActionResult Pesquisa() {
+
+            return Json(_context.Jogos.Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).ToList());
+        }
+
         [AllowAnonymous]
         public IActionResult Index() {
             ViewData["Categorias"] = _context.Categoria.ToList();
@@ -66,6 +73,33 @@ namespace EspamaGS_2._0.Controllers {
 
         public IActionResult Carrinho() {
             return View(_context.Carts.Include(c => c.IdJogoNavigation).Include(c => c.IdJogoNavigation.IdCategoriaNavigation).Include(c => c.IdJogoNavigation.IdDesenvolvedoraNavigation).Include(c => c.IdJogoNavigation.IdPlataformaNavigation).Where(c => c.IdCliente == User.Identity!.Name).ToList());
+        }
+
+        public async Task<IActionResult> BuyNow(int id) {
+            if (id == null) return RedirectToAction(nameof(Index));
+            if (_context.Jogos.FirstOrDefault(x => x.Id == id) == null) return RedirectToAction(nameof(Index));
+            _context.Carts.Add(new Cart {
+                IdCliente = User.Identity!.Name!,
+                IdJogo = (int)id,
+            });
+            await _context.SaveChangesAsync();
+            var items = new List<Compra>();
+            var cartitems = _context.Carts.Where(c => c.IdCliente == User.Identity!.Name).Include(c => c.IdJogoNavigation).ToList();
+            if (!cartitems.Any()) return RedirectToAction(nameof(Carrinho));
+            foreach (var item in cartitems) {
+                var compra = new Compra {
+                    DataCompra = DateTime.Now,
+                    Preco = item.IdJogoNavigation.Preco,
+                    IdCliente = item.IdCliente,
+                    IdJogo = item.IdJogoNavigation.Id,
+                    Key = GameKeyGenerator.GenerateKey()
+                };
+                items.Add(compra);
+                _context.Carts.Remove(item);
+            }
+            _context.Compras.AddRange(items);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Compras));
         }
 
         public async Task<IActionResult> AddCarrinho(int? id) {

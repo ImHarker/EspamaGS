@@ -16,6 +16,7 @@ $(document).on("keydown", function (e) {
 $(".searchbar").on("keydown", function (e) {
     if (e.which == 13) {
         CloseSearch();
+        $('.jogos-container').empty().append("<p>asdasdas</p>");
     }
 });
 
@@ -44,4 +45,21 @@ function onFocusSearchBar() {
         hidden.item(i).removeAttribute("hidden");
 
 }
+//#endregion
+
+//#region AddFuncionario
+function onSubmitNewFunc() {
+    var field1 = document.getElementById('UserFunc').value;
+    var field2 = document.getElementById('TipoFunc').options[document.getElementById('TipoFunc').selectedIndex].text;
+
+    return confirm("Tem a certeza que quer adicionar o user '" + field1 + "' como '" + field2 + "'?");
+}
+
+$('#TipoFunc').on('change', function () {
+    if (this.value == 1) {
+        $('.hideme').show();
+    } else if (this.value == 2) {
+        $('.hideme').hide();
+    }
+});
 //#endregion
