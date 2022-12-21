@@ -21,9 +21,35 @@ namespace EspamaGS_2._0.Controllers {
         }
 
         [AllowAnonymous]
-        public IActionResult Pesquisa() {
+        public IActionResult Pesquisa(string? nome, int? cat, int? plat, int? ordenar, int? ordem) {
+            IQueryable<Jogo> result;
+            if (string.IsNullOrEmpty(nome)) nome = "";
 
-            return Json(_context.Jogos.Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).ToList());
+            result = _context.Jogos.Where(c => c.Nome.Contains(nome));
+
+            if (cat != 0) {
+                result = result.Where(c => c.IdCategoria == cat);
+            }
+
+            if (plat != 0) {
+                result = result.Where(c => c.IdPlataforma == plat);
+            }
+
+            switch (ordenar) {
+                case 0:
+                    if(ordem == 0) return Json(result.OrderByDescending(c => _context.Compras.Count(j => j.IdJogo == c.Id)).Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).ToList());
+                    return Json(result.OrderBy(c => _context.Compras.Count(j => j.IdJogo == c.Id)).Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).ToList());
+                    
+                case 1:
+                    if (ordem == 0) return Json(result.OrderByDescending(c => c.Preco).Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).ToList());
+                   return Json(result.OrderBy(c => c.Preco).Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).ToList());
+                case 2:
+                    if (ordem == 0) return Json(result.OrderByDescending(c => c.DataLancamento).Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).ToList());
+                    return Json(result.OrderBy(c => c.DataLancamento).Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).ToList());
+
+            }
+
+            return NoContent();
         }
 
         [AllowAnonymous]

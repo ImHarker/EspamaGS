@@ -16,7 +16,38 @@ $(document).on("keydown", function (e) {
 $(".searchbar").on("keydown", function (e) {
     if (e.which == 13) {
         CloseSearch();
-        $('.jogos-container').empty().append("<p>asdasdas</p>");
+        $('.jogos-container').empty();
+        let mydata = {nome: $('#searchbar').val(), cat: $('#Categorias').val(), plat: $('#Plataforma').val(), ordenar: $('#ordenar').prop('selectedIndex'), ordem: $('#ordem').prop('selectedIndex') }
+        $.ajax({ url: '/Home/Pesquisa', data: mydata }).done(function (data) {
+            if (data.length == 0) {
+                $('.jogos-container').append(`<h3 class="text-white p-4 pt-0 pb-2">Não foi encontrado nenhum jogo que satisfaz os seus critérios!</h3>`);}
+            data.forEach( jogo => 
+                $('.jogos-container').append(`
+                    <!--TEMPLATE-->
+                <div class="gamecard col-sm-4 col-md-2 m-3 p-3 bg-dark text-white">
+                        <a asp-controller="Home" asp-action="Jogo" asp-route-id="${jogo.id}">
+                        <span class="gamecard-link"></span>
+                    </a>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <img class="mb-2 img-fluid game-image" src="/img/Jogos/${jogo.foto}">
+			</div>
+                        <p class="game-name m-1">${jogo.nome}</p>
+                        <div class="d-flex">
+                            <span class="badge rounded-pill bg-danger m-1">${jogo.idCategoriaNavigation.nome}</span>
+                        </div>
+                        <div class="d-flex">
+                            <span class="badge rounded-pill bg-primary m-1">${jogo.idPlataformaNavigation.nome}</span>
+                        </div>
+                        <div class="d-flex">
+                            <span class="badge rounded-pill bg-warning m-1">${jogo.idDesenvolvedoraNavigation.nome}</span>
+                        </div>
+                        <p class="game-price m-1">${jogo.preco.toFixed(2)} €</p>
+                    </div>
+                    <!-- FIM TEMPLATE-->
+                `)
+            );
+        });
+    
     }
 });
 
@@ -35,7 +66,6 @@ function CloseSearch() {
 
 function onFocusSearchBar() {
     let hidden = document.getElementsByClassName("unhideme");
-    console.log(document.getElementById("searchico"));
     document.getElementById("searchico").style.stroke = "#808080";
     document.getElementById("searchico").style.zIndex = 3;
     document.getElementById("searchbar").style.boxShadow = "0 0 0 9999px #000000";

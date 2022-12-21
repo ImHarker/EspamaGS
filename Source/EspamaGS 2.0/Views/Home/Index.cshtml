@@ -17,11 +17,13 @@
 		<label for="Categorias">Categoria</label>
 		<br/>
 		<select id="Categorias" class="form-control form-select" asp-items='new SelectList(ViewBag.Categorias, "Id", "Nome")'>
+			<option value="0">Qualquer</option>
 		</select>
 	</div>
 	<div class="col-sm-2 d-inline-block">
 	<label for="Plataforma">Plataforma</label>
 		<select id="Plataforma" class="form-control form-select" asp-items='new SelectList(ViewBag.Plataformas, "Id", "Nome")'>
+			<option value="0">Qualquer</option>
 		</select>
 			</div>
 	<div class="col-sm-2 d-inline-block">
@@ -54,6 +56,8 @@
 			<p class="game-name m-1">@jogo.Nome</p>
 			<div class="d-flex">
 				<span class="badge rounded-pill bg-danger m-1">@jogo.IdCategoriaNavigation.Nome</span>
+			</div>
+			<div class="d-flex">
 				<span class="badge rounded-pill bg-primary m-1">@jogo.IdPlataformaNavigation.Nome</span>
 			</div>
 			<div class="d-flex">
