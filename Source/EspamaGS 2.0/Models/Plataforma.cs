@@ -5,13 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
-namespace EspamaGS_2._0.Models
-{
+namespace EspamaGS_2._0.Models {
     [Table("Plataforma")]
-    public partial class Plataforma
-    {
-        public Plataforma()
-        {
+    public partial class Plataforma {
+        public Plataforma() {
             Jogos = new HashSet<Jogo>();
         }
 
@@ -20,7 +17,7 @@ namespace EspamaGS_2._0.Models
         [JsonInclude]
         public int Id { get; set; }
         [Column("NOME")]
-        [StringLength(10)]
+        [StringLength(20)]
         [Unicode(false)]
         [JsonInclude]
         public string Nome { get; set; } = null!;

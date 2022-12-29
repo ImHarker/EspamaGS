@@ -28,8 +28,10 @@ namespace EspamaGS_2._0.Controllers {
             return RedirectToAction(nameof(Dashboard));
         }
 
+        #region Logs
+
         public IActionResult LogsCompras() {
-            return View(_context.Compras.Include(c=> c.IdJogoNavigation).ToList());
+            return View(_context.Compras.Include(c => c.IdJogoNavigation).ToList());
         }
         public IActionResult LogsJogos() {
             return View(_context.Jogos.Include(c => c.IdFuncionarioNavigation).ToList());
@@ -38,19 +40,22 @@ namespace EspamaGS_2._0.Controllers {
         public IActionResult LogsFuncionarios() {
             ViewData["Funcionarios"] = _context.Funcionarios.Include(c => c.IdAdminNavigation).ToList();
             ViewData["Admin"] = _context.Administradors.Include(c => c.IdAdminNavigation).ToList();
-            
+
             return View();
         }
+        #endregion
+
+        #region Add    
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddFuncionarios(string? id, int? tipo, string? tlf) {
             if (id == null) return RedirectToAction(nameof(AddFuncionarios));
             if (tipo is not (1 or 2)) return RedirectToAction(nameof(AddFuncionarios));
-            if(tipo== 1 && tlf == null) return RedirectToAction(nameof(AddFuncionarios));
+            if (tipo == 1 && tlf == null) return RedirectToAction(nameof(AddFuncionarios));
 
-            var user =  _userManager.Users.FirstOrDefault(c => c.UserName == id);
-            if(user == null) return RedirectToAction(nameof(AddFuncionarios));
+            var user = _userManager.Users.FirstOrDefault(c => c.UserName == id);
+            if (user == null) return RedirectToAction(nameof(AddFuncionarios));
             if (_userManager.IsInRoleAsync(user, "Admin").Result || _userManager.IsInRoleAsync(user, "Funcionario").Result)
                 return RedirectToAction(nameof(AddFuncionarios));
 
@@ -85,7 +90,7 @@ namespace EspamaGS_2._0.Controllers {
         public IActionResult AddFuncionarios() {
             var funcionarios = _context.Funcionarios;
             var administradores = _context.Administradors;
-            var users = _userManager.Users.Where(x => funcionarios.FirstOrDefault(c=> x.UserName == c.IdUtilizador)  == null).Where(x=> administradores.FirstOrDefault(c => x.UserName == c.IdUtilizador) == null).ToList();
+            var users = _userManager.Users.Where(x => funcionarios.FirstOrDefault(c => x.UserName == c.IdUtilizador) == null).Where(x => administradores.FirstOrDefault(c => x.UserName == c.IdUtilizador) == null).ToList();
 
 
             return View(users);
@@ -187,6 +192,87 @@ namespace EspamaGS_2._0.Controllers {
 
             return RedirectToAction(nameof(AddJogo));
         }
+
+        #endregion
+
+        #region Gerir
+        public IActionResult GerirFuncionarios() {
+            ViewData["Funcionarios"] = _context.Funcionarios.Where(c => c.IdAdmin == User.Identity!.Name).ToList();
+            ViewData["Admin"] = _context.Administradors.Where(c => c.IdAdmin == User.Identity!.Name).ToList();
+            return View();
+        }
+        public IActionResult GerirJogos() {
+
+            return View(_context.Jogos.Include(c => c.IdPlataformaNavigation).Where(c => c.IdFuncionario == User.Identity!.Name).ToList());
+        }
+        public IActionResult GerirCategorias() {
+
+            return View(_context.Categoria.ToList());
+        }
+        public IActionResult GerirPlataformas() {
+
+            return View(_context.Plataformas.ToList());
+        }
+        public IActionResult GerirDesenvolvedoras() {
+
+            return View(_context.Desenvolvedoras.ToList());
+        }
+        #endregion
+
+        #region Editar
+
+        public IActionResult EditarFuncionario() {
+            return View();
+        }
+        public IActionResult EditarJogo() {
+
+            return View();
+        }
+        public IActionResult EditarCategoria() {
+
+            return View();
+        }
+        public IActionResult EditarPlataforma() {
+
+            return View();
+        }
+        public IActionResult EditarDesenvolvedora() {
+
+            return View();
+        }
+
+        #endregion
+
+        #region Apagar
+
+        public IActionResult ApagarFuncionario(int? id) {
+            return RedirectToAction(nameof(GerirFuncionarios));
+        }
+        public IActionResult ApagarAdministradore(int? id) {
+            return RedirectToAction(nameof(GerirFuncionarios));
+        }
+        public IActionResult ApagarJogo(int? id) {
+
+            return RedirectToAction(nameof(GerirJogos));
+        }
+        public async Task<IActionResult> ApagarCategoria(int? id) {
+            var cat = _context.Categoria.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
+            if (cat == null) return RedirectToAction(nameof(GerirCategorias));
+            if (cat.Jogos.Count != 0) return RedirectToAction(nameof(GerirCategorias));
+            _context.Categoria.Remove(cat);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(GerirCategorias));
+        }
+        public IActionResult ApagarPlataforma(int? id) {
+
+            return RedirectToAction(nameof(GerirPlataformas));
+        }
+        public IActionResult ApagarDesenvolvedora(int? id) {
+
+            return RedirectToAction(nameof(GerirDesenvolvedoras));
+        }
+
+        #endregion
 
         public IActionResult Dashboard() {
             ViewData["Users"] = _userManager.Users.ToList();

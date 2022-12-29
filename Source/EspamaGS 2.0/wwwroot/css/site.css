@@ -314,4 +314,8 @@ img[src="https://localhost:7251/favicon.ico"] {
     /* ReSharper disable CssNotResolved */
     scrollbar-width: none; /* Firefox */
     /* ReSharper restore CssNotResolved */
-} 
+}
+
+.apagar-jogo svg{
+    stroke: red;
+}
