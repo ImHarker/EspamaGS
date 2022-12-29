@@ -245,13 +245,43 @@ namespace EspamaGS_2._0.Controllers {
 
         #region Apagar
 
-        public IActionResult ApagarFuncionario(int? id) {
+        public async Task<IActionResult> ApagarFuncionario(string? id) {
+            var user = _userManager.Users.FirstOrDefault(c => c.UserName == id);
+            if (user == null) { return RedirectToAction(nameof(GerirFuncionarios)); }
+            var func = _context.Funcionarios.FirstOrDefault(c => c.IdUtilizador == id);
+            if (func == null) { return RedirectToAction(nameof(GerirFuncionarios)); }
+            if (_context.Jogos.Include(c => c.IdFuncionarioNavigation).Any(c => c.IdFuncionario == id)) { return RedirectToAction(nameof(GerirFuncionarios)); }
+            _context.Funcionarios.Remove(func);
+            await _userManager.RemoveFromRoleAsync(user, "Funcionario");
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(GerirFuncionarios));
         }
-        public IActionResult ApagarAdministradore(int? id) {
+        public async Task<IActionResult> ApagarAdministrador(string? id) {
+            var user = _userManager.Users.FirstOrDefault(c => c.UserName == id);
+            if (user == null) { return RedirectToAction(nameof(GerirFuncionarios)); }
+
+            var admin = _context.Administradors.FirstOrDefault(c => c.IdUtilizador == id);
+            if (admin == null) { return RedirectToAction(nameof(GerirFuncionarios)); }
+            if (_context.Funcionarios.Include(c => c.IdAdminNavigation).Any(c => c.IdAdmin == id)) { return RedirectToAction(nameof(GerirFuncionarios)); }
+            if (_context.Administradors.Include(c => c.IdAdminNavigation).Any(c => c.IdAdmin == id)) { return RedirectToAction(nameof(GerirFuncionarios)); }
+
+            _context.Administradors.Remove(admin);
+            await _userManager.RemoveFromRoleAsync(user, "Admin");
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(GerirFuncionarios));
         }
-        public IActionResult ApagarJogo(int? id) {
+        public async Task<IActionResult> ApagarJogo(int? id) {
+            string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/");
+            var jogo = _context.Jogos.FirstOrDefault(c => c.Id == id);
+            if (jogo == null) { return RedirectToAction(nameof(GerirJogos)); }
+            dest = Path.Combine(dest, jogo.Foto);
+            _context.Jogos.Remove(jogo);
+            await _context.SaveChangesAsync();
+
+            if (System.IO.File.Exists(dest)) {
+                System.IO.File.Delete(dest);
+            }
 
             return RedirectToAction(nameof(GerirJogos));
         }
@@ -263,12 +293,20 @@ namespace EspamaGS_2._0.Controllers {
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(GerirCategorias));
         }
-        public IActionResult ApagarPlataforma(int? id) {
-
+        public async Task<IActionResult> ApagarPlataforma(int? id) {
+            var plat = _context.Plataformas.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
+            if (plat == null) return RedirectToAction(nameof(GerirPlataformas));
+            if (plat.Jogos.Count != 0) return RedirectToAction(nameof(GerirPlataformas));
+            _context.Plataformas.Remove(plat);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(GerirPlataformas));
         }
-        public IActionResult ApagarDesenvolvedora(int? id) {
-
+        public async Task<IActionResult> ApagarDesenvolvedora(int? id) {
+            var des = _context.Desenvolvedoras.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
+            if (des == null) return RedirectToAction(nameof(GerirDesenvolvedoras));
+            if (des.Jogos.Count != 0) return RedirectToAction(nameof(GerirDesenvolvedoras));
+            _context.Desenvolvedoras.Remove(des);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(GerirDesenvolvedoras));
         }
 
