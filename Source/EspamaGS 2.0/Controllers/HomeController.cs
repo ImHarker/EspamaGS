@@ -21,6 +21,13 @@ namespace EspamaGS_2._0.Controllers {
         }
 
         [AllowAnonymous]
+        public IActionResult Scroll(int? page) {
+            if (page == null) return NoContent();
+            return Json(_context.Jogos.Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).Skip((int)page * 10).Take(10).ToList());
+
+        }
+
+        [AllowAnonymous]
         public IActionResult Pesquisa(string? nome, int? cat, int? plat, int? ordenar, int? ordem) {
             IQueryable<Jogo> result;
             if (string.IsNullOrEmpty(nome)) nome = "";
@@ -53,7 +60,7 @@ namespace EspamaGS_2._0.Controllers {
             ViewData["Plataformas"] = _context.Plataformas.ToList();
             if (_signInManager.IsSignedIn(User))
                 TempData["cartitems"] = _context.Carts.Count(c => c.IdCliente == User.Identity!.Name);
-            return View(_context.Jogos.Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).ToList());
+            return View(_context.Jogos.Include(c => c.IdCategoriaNavigation).Include(c => c.IdPlataformaNavigation).Include(c => c.IdDesenvolvedoraNavigation).Take(10).ToList());
         }
 
 

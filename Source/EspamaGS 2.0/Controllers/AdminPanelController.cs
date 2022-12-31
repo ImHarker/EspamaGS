@@ -267,8 +267,12 @@ namespace EspamaGS_2._0.Controllers {
             jogoupdate.IdDesenvolvedora = jogo.IdDesenvolvedora;
 
             if (foto != null) {
+                string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/");
+                if (System.IO.File.Exists(Path.Combine(dest, jogoupdate.Foto))) {
+                    System.IO.File.Delete(Path.Combine(dest, jogoupdate.Foto));
+                }
                 jogoupdate.Foto = jogoupdate.Id + "." + foto.FileName.Split(".").Last();
-                string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/" + jogoupdate.Foto);
+                dest = Path.Combine(dest, jogoupdate.Foto);
                 FileStream fs = new FileStream(dest, FileMode.Create);
                 await foto.CopyToAsync(fs);
                 fs.Close();
