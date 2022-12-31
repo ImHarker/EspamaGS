@@ -1,0 +1,30 @@
+﻿@model Desenvolvedora
+@{
+    ViewData["Title"] = "EditarDesenvolvedora";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section AddToHead{
+	<link href="@Url.Content("~/css/admin.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="add-card-container add-card-sm">
+	<form asp-action="EditarDesenvolvedora">
+		<div class="login-card m-5">			
+			<div>
+				<h1 class="AddText mb-0 pb-0">Editar Desenvolvedora</h1>
+			</div>
+			<div>
+				<h3 class="AddText pt-1 mb-1">'@Model.Nome'</h3>
+			</div>
+			<div>
+				<label asp-for="Nome">Nome</label>
+				<br>
+				<input asp-for="Nome" type="text" placeholder="Enter Name">
+			</div>
+			<div>
+				<button type="submit">Editar</button>
+			</div>
+		</div>
+	</form>
+</div>

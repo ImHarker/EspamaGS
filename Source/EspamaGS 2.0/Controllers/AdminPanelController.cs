@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Contracts;
 using System.Text.Encodings.Web;
 
 namespace EspamaGS_2._0.Controllers {
@@ -163,7 +164,7 @@ namespace EspamaGS_2._0.Controllers {
             if (foto == null) return RedirectToAction(nameof(AddJogo));
             if (jogo.Nome == null) return RedirectToAction(nameof(AddJogo));
             if (jogo.Descricao == null) return RedirectToAction(nameof(AddJogo));
-            if (jogo.Preco == -1) return RedirectToAction(nameof(AddJogo));
+            if (jogo.Preco < 0) return RedirectToAction(nameof(AddJogo));
             if (jogo.DataLancamento == null) return RedirectToAction(nameof(AddJogo));
             if (jogo.IdCategoria == 0) return RedirectToAction(nameof(AddJogo));
             if (jogo.IdPlataforma == 0) return RedirectToAction(nameof(AddJogo));
@@ -175,7 +176,7 @@ namespace EspamaGS_2._0.Controllers {
             jogo.DataRegisto = DateTime.Now;
             _context.Jogos.Add(jogo);
             await _context.SaveChangesAsync();
-            jogo.Foto = jogo.Id.ToString() + "." + foto.FileName.Split(".").Last();
+            jogo.Foto = jogo.Id + "." + foto.FileName.Split(".").Last();
             _context.Jogos.Update(jogo);
             await _context.SaveChangesAsync();
             dest = Path.Combine(dest, jogo.Foto);
@@ -221,24 +222,128 @@ namespace EspamaGS_2._0.Controllers {
 
         #region Editar
 
-        public IActionResult EditarFuncionario() {
-            return View();
+        public IActionResult EditarFuncionario(string? id) {
+            var func = _context.Funcionarios.FirstOrDefault(c => c.IdUtilizador == id);
+            if (func == null) { return RedirectToAction(nameof(GerirJogos)); }
+            return View(func);
         }
-        public IActionResult EditarJogo() {
 
-            return View();
+        [HttpPost]
+        public async Task<IActionResult> EditarFuncionario(string? id, Funcionario fun) {
+            var funupdate = _context.Funcionarios.FirstOrDefault(c => c.IdUtilizador == id);
+            if (funupdate == null) return RedirectToAction(nameof(GerirFuncionarios));
+            if (String.IsNullOrEmpty(fun.Telefone)) return View(funupdate);
+            funupdate.Telefone = fun.Telefone;
+            _context.Funcionarios.Update(funupdate);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(GerirFuncionarios));
         }
-        public IActionResult EditarCategoria() {
 
-            return View();
+        public IActionResult EditarJogo(int? id) {
+            var jogo = _context.Jogos.FirstOrDefault(c => c.Id == id);
+            if (jogo == null) { return RedirectToAction(nameof(GerirJogos)); }
+            ViewData["Categorias"] = _context.Categoria.ToList();
+            ViewData["Plataformas"] = _context.Plataformas.ToList();
+            ViewData["Desenvolvedoras"] = _context.Desenvolvedoras.ToList();
+            return View(jogo);
         }
-        public IActionResult EditarPlataforma() {
+        [HttpPost]
+        public async Task<IActionResult> EditarJogo(int? id, Jogo jogo, IFormFile? foto) {
+            var jogoupdate = _context.Jogos.FirstOrDefault(c => c.Id == id);
+            if (jogoupdate == null) { return RedirectToAction(nameof(GerirJogos)); }
+            if (String.IsNullOrEmpty(jogo.Nome)) return RedirectToAction(nameof(EditarJogo), id);
+            if (String.IsNullOrEmpty(jogo.Descricao)) return RedirectToAction(nameof(EditarJogo), id);
+            if (jogo.Preco < 0) return RedirectToAction(nameof(EditarJogo), id);
+            if (jogo.DataLancamento == null) return RedirectToAction(nameof(EditarJogo), id);
+            if (jogo.IdCategoria == 0) return RedirectToAction(nameof(EditarJogo), id);
+            if (jogo.IdPlataforma == 0) return RedirectToAction(nameof(EditarJogo), id);
+            if (jogo.IdDesenvolvedora == 0) return RedirectToAction(nameof(EditarJogo), id);
+            jogoupdate.Nome = jogo.Nome;
+            jogoupdate.Descricao = jogo.Descricao;
+            jogoupdate.Preco = jogo.Preco;
+            jogoupdate.DataLancamento = jogo.DataLancamento;
+            jogoupdate.IdCategoria = jogo.IdCategoria;
+            jogoupdate.IdPlataforma = jogo.IdPlataforma;
+            jogoupdate.IdDesenvolvedora = jogo.IdDesenvolvedora;
 
-            return View();
+            if (foto != null) {
+                jogoupdate.Foto = jogoupdate.Id + "." + foto.FileName.Split(".").Last();
+                string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/" + jogoupdate.Foto);
+                FileStream fs = new FileStream(dest, FileMode.Create);
+                await foto.CopyToAsync(fs);
+                fs.Close();
+            }
+            
+            _context.Jogos.Update(jogoupdate);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(GerirJogos));
         }
-        public IActionResult EditarDesenvolvedora() {
 
-            return View();
+        public IActionResult EditarCategoria(int? id) {
+            var cat = _context.Categoria.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
+            if (cat == null) return RedirectToAction(nameof(GerirCategorias));
+            return View(cat);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditarCategoria(int? id, Categoria cat) {
+            if (id != cat.Id) return RedirectToAction(nameof(GerirCategorias));
+            try {
+                _context.Categoria.Update(cat);
+                await _context.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException) {
+                if (_context.Categoria.Any(c => c.Id == id)) {
+                    return NotFound();
+                } else {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(GerirCategorias)); ;
+        }
+
+
+        public IActionResult EditarPlataforma(int? id) {
+            var plat = _context.Plataformas.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
+            if (plat == null) return RedirectToAction(nameof(GerirPlataformas));
+            return View(plat);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditarPlataforma(int? id, Plataforma plat) {
+            if (id != plat.Id) return RedirectToAction(nameof(GerirPlataformas));
+            try {
+                _context.Plataformas.Update(plat);
+                await _context.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException) {
+                if (_context.Plataformas.Any(c => c.Id == id)) {
+                    return NotFound();
+                } else {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(GerirPlataformas)); ;
+        }
+
+        public IActionResult EditarDesenvolvedora(int? id) {
+            var des = _context.Desenvolvedoras.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
+            if (des == null) return RedirectToAction(nameof(GerirDesenvolvedoras));
+            return View(des);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditarDesenvolvedora(int? id, Desenvolvedora des) {
+            if (id != des.Id) return RedirectToAction(nameof(GerirDesenvolvedoras));
+            try {
+                _context.Desenvolvedoras.Update(des);
+                await _context.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException) {
+                if (_context.Desenvolvedoras.Any(c => c.Id == id)) {
+                    return NotFound();
+                } else {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(GerirDesenvolvedoras)); ;
         }
 
         #endregion

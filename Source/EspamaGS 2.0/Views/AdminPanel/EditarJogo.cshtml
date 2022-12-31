@@ -1,0 +1,72 @@
+﻿@model Jogo
+@{
+    ViewData["Title"] = "EditarJogo";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section AddToHead{
+    <link href="@Url.Content("~/css/admin.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="add-card-container pb-3 mb-5">
+	<form asp-action="EditarJogo" enctype="multipart/form-data">
+		<div class="login-card addjogo-card m-5">			
+			<div>
+				<h1 class="AddText mb-0 pb-0">Editar Jogo</h1>
+			</div>
+			<div>
+				<h3 class="AddText pt-1 mb-1">'@Model.Nome'</h3>
+			</div>
+			<div>
+				<label asp-for="Nome">Título</label>
+				<br>
+				<input asp-for="Nome" type="text" placeholder="Enter Title">
+			</div>
+			<div>
+				<label asp-for="Descricao">Descrição</label>
+				<br>
+				<div id="descJogocontainer">
+					<textarea id="descJogo" asp-for="Descricao" rows="10" type="text" placeholder="Enter Desc"></textarea>
+				</div>
+			</div>
+			<div>
+				<label asp-for="Foto">Foto</label>
+				<br>
+				<input asp-for="Foto" type="file"  accept=".png, .jpeg, .jpg">
+			</div>
+			<div>
+				<label asp-for="Preco">Preço</label>
+				<br>
+				<input asp-for="Preco" type="text" placeholder="Enter Price">
+			</div>
+			<div>
+				<label asp-for="DataLancamento">Data de Lançamento</label>
+				<br>
+				<input asp-for="DataLancamento" type="date"/>
+			</div>
+			<div>
+				<label asp-for="IdCategoria">Categoria</label>
+				<br>
+				<select asp-for="IdCategoria" class="form-control form-select" asp-items='new SelectList(ViewBag.Categorias, "Id", "Nome")'>
+				</select>
+			</div>
+			<div>
+				<label asp-for="IdDesenvolvedora">Desenvolvedora</label>
+				<br>
+				<select asp-for="IdDesenvolvedora" class="form-control form-select" asp-items='new SelectList(ViewBag.Desenvolvedoras, "Id", "Nome")'>
+				</select>
+			</div>
+			<div>
+				<label asp-for="IdPlataforma">Plataforma</label>
+				<br>
+				<select asp-for="IdPlataforma" class="form-control form-select" asp-items='new SelectList(ViewBag.Plataformas, "Id", "Nome")'>
+				</select>
+			</div>
+			<div>
+				<button type="submit">Editar</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+
