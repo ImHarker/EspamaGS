@@ -59,13 +59,13 @@
 			</div>
 			<p class="game-name m-1">@jogo.Nome</p>
 			<div class="d-flex">
-				<span class="badge rounded-pill bg-danger m-1">@jogo.IdCategoriaNavigation.Nome</span>
+				<span class="badge rounded-pill bg-danger m-1">@jogo.IdCategoriaNavigation!.Nome</span>
 			</div>
 			<div class="d-flex">
-				<span class="badge rounded-pill bg-primary m-1">@jogo.IdPlataformaNavigation.Nome</span>
+				<span class="badge rounded-pill bg-primary m-1">@jogo.IdPlataformaNavigation!.Nome</span>
 			</div>
 			<div class="d-flex">
-				<span class="badge rounded-pill bg-warning m-1">@jogo.IdDesenvolvedoraNavigation.Nome</span>
+				<span class="badge rounded-pill bg-warning m-1">@jogo.IdDesenvolvedoraNavigation!.Nome</span>
 			</div>
 			<p class="game-price m-1">@Decimal.Round(jogo.Preco, 2) €</p>
 		</div>

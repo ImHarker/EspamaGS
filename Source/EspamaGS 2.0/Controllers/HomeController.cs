@@ -20,6 +20,7 @@ namespace EspamaGS_2._0.Controllers {
             _signInManager = signInManager;
         }
 
+
         [AllowAnonymous]
         public IActionResult Scroll(int? page) {
             if (page == null) return NoContent();
@@ -70,7 +71,7 @@ namespace EspamaGS_2._0.Controllers {
             ViewData["Categorias"] = _context.Categoria.Where(x => categoriasEscolhidas.FirstOrDefault(c => x.Id == c.IdCategoriaNavigation.Id) == null);
             return View(categoriasEscolhidas.ToList());
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Favoritos(int? id) {
             if (id == null) return RedirectToAction(nameof(Favoritos));
@@ -93,11 +94,27 @@ namespace EspamaGS_2._0.Controllers {
             return RedirectToAction(nameof(Favoritos));
         }
 
+
         public IActionResult Settings() {
 
-            return View();
+            return View(_context.UserSettings.FirstOrDefault(c => c.Id == User.Identity!.Name));
         }
-        
+
+        [HttpPost]
+        public async Task<IActionResult> Settings(int? id) {
+            if (id == null) return NoContent();
+            var usr = _context.UserSettings.FirstOrDefault(c => c.Id == User.Identity!.Name);
+            if (usr == null) return NoContent();
+            switch (id) {
+                case 0:
+                    usr.EmailNotifications = !usr.EmailNotifications;
+                    break;
+            }
+
+            _context.UserSettings.Update(usr);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
         public IActionResult Carrinho() {
             return View(_context.Carts.Include(c => c.IdJogoNavigation).Include(c => c.IdJogoNavigation.IdCategoriaNavigation).Include(c => c.IdJogoNavigation.IdDesenvolvedoraNavigation).Include(c => c.IdJogoNavigation.IdPlataformaNavigation).Where(c => c.IdCliente == User.Identity!.Name).ToList());
@@ -156,9 +173,9 @@ namespace EspamaGS_2._0.Controllers {
 
         public async Task<IActionResult> Checkout() {
             var items = new List<Compra>();
-            var cartitems = _context.Carts.Where(c => c.IdCliente == User.Identity!.Name).Include(c=> c.IdJogoNavigation).ToList();
-            if(!cartitems.Any()) return RedirectToAction(nameof(Carrinho));
-            foreach (var item in cartitems ) {
+            var cartitems = _context.Carts.Where(c => c.IdCliente == User.Identity!.Name).Include(c => c.IdJogoNavigation).ToList();
+            if (!cartitems.Any()) return RedirectToAction(nameof(Carrinho));
+            foreach (var item in cartitems) {
                 var compra = new Compra {
                     DataCompra = DateTime.Now,
                     Preco = item.IdJogoNavigation.Preco,
@@ -177,7 +194,7 @@ namespace EspamaGS_2._0.Controllers {
 
         public IActionResult Compras() {
 
-            return View(_context.Compras.Where(c => c.IdCliente == User.Identity!.Name).Include(c=> c.IdJogoNavigation).Include(c=> c.IdJogoNavigation.IdCategoriaNavigation).Include(c=>c.IdJogoNavigation.IdDesenvolvedoraNavigation).Include(c=>c.IdJogoNavigation.IdPlataformaNavigation).OrderByDescending(c => c.DataCompra).ToList());
+            return View(_context.Compras.Where(c => c.IdCliente == User.Identity!.Name).Include(c => c.IdJogoNavigation).Include(c => c.IdJogoNavigation.IdCategoriaNavigation).Include(c => c.IdJogoNavigation.IdDesenvolvedoraNavigation).Include(c => c.IdJogoNavigation.IdPlataformaNavigation).OrderByDescending(c => c.DataCompra).ToList());
         }
 
         [AllowAnonymous]

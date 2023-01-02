@@ -185,6 +185,7 @@ namespace EspamaGS_2._0.Controllers {
             fs.Close();
             TempData["msg"] = "O jogo '" + jogo.Nome + "' foi inserido com sucesso!";
             foreach (var user in _userManager.Users) {
+                if(_context.UserSettings.FirstOrDefault(c => c.Id == user.UserName).EmailNotifications)
                 if (_context.Preferencia.Any(c => user.UserName == c.IdCliente && c.IdCategoria == jogo.IdCategoria)) {
                     var callbackUrl = Url.ActionLink("Jogo", "Home", values: new { id = jogo.Id });
                     await _emailSender.SendEmailAsync(user.Email, "Novo Jogo numa Categoria Preferida", $"O jogo '{jogo.Nome}' foi adicionado e está numa das suas categorias preferidas.\nPode ser visitado aqui: <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>{jogo.Nome}</a>");
@@ -197,23 +198,33 @@ namespace EspamaGS_2._0.Controllers {
         #endregion
 
         #region Gerir
+        [Authorize(Roles = "Admin")]
+
         public IActionResult GerirFuncionarios() {
             ViewData["Funcionarios"] = _context.Funcionarios.Where(c => c.IdAdmin == User.Identity!.Name).ToList();
             ViewData["Admin"] = _context.Administradors.Where(c => c.IdAdmin == User.Identity!.Name).ToList();
             return View();
         }
+        [Authorize(Roles = "Funcionario")]
+
         public IActionResult GerirJogos() {
 
             return View(_context.Jogos.Include(c => c.IdPlataformaNavigation).Where(c => c.IdFuncionario == User.Identity!.Name).ToList());
         }
+        [Authorize(Roles = "Funcionario")]
+
         public IActionResult GerirCategorias() {
 
             return View(_context.Categoria.ToList());
         }
+        [Authorize(Roles = "Funcionario")]
+
         public IActionResult GerirPlataformas() {
 
             return View(_context.Plataformas.ToList());
         }
+        [Authorize(Roles = "Funcionario")]
+
         public IActionResult GerirDesenvolvedoras() {
 
             return View(_context.Desenvolvedoras.ToList());
@@ -221,12 +232,14 @@ namespace EspamaGS_2._0.Controllers {
         #endregion
 
         #region Editar
+        [Authorize(Roles = "Admin")]
 
         public IActionResult EditarFuncionario(string? id) {
             var func = _context.Funcionarios.FirstOrDefault(c => c.IdUtilizador == id);
             if (func == null) { return RedirectToAction(nameof(GerirJogos)); }
             return View(func);
         }
+        [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public async Task<IActionResult> EditarFuncionario(string? id, Funcionario fun) {
@@ -238,6 +251,7 @@ namespace EspamaGS_2._0.Controllers {
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(GerirFuncionarios));
         }
+        [Authorize(Roles = "Funcionario")]
 
         public IActionResult EditarJogo(int? id) {
             var jogo = _context.Jogos.FirstOrDefault(c => c.Id == id);
@@ -247,6 +261,8 @@ namespace EspamaGS_2._0.Controllers {
             ViewData["Desenvolvedoras"] = _context.Desenvolvedoras.ToList();
             return View(jogo);
         }
+        [Authorize(Roles = "Funcionario")]
+
         [HttpPost]
         public async Task<IActionResult> EditarJogo(int? id, Jogo jogo, IFormFile? foto) {
             var jogoupdate = _context.Jogos.FirstOrDefault(c => c.Id == id);
@@ -277,17 +293,19 @@ namespace EspamaGS_2._0.Controllers {
                 await foto.CopyToAsync(fs);
                 fs.Close();
             }
-            
+
             _context.Jogos.Update(jogoupdate);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(GerirJogos));
         }
+        [Authorize(Roles = "Funcionario")]
 
         public IActionResult EditarCategoria(int? id) {
             var cat = _context.Categoria.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (cat == null) return RedirectToAction(nameof(GerirCategorias));
             return View(cat);
         }
+        [Authorize(Roles = "Funcionario")]
 
         [HttpPost]
         public async Task<IActionResult> EditarCategoria(int? id, Categoria cat) {
@@ -305,12 +323,14 @@ namespace EspamaGS_2._0.Controllers {
             return RedirectToAction(nameof(GerirCategorias)); ;
         }
 
+        [Authorize(Roles = "Funcionario")]
 
         public IActionResult EditarPlataforma(int? id) {
             var plat = _context.Plataformas.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (plat == null) return RedirectToAction(nameof(GerirPlataformas));
             return View(plat);
         }
+        [Authorize(Roles = "Funcionario")]
 
         [HttpPost]
         public async Task<IActionResult> EditarPlataforma(int? id, Plataforma plat) {
@@ -327,12 +347,14 @@ namespace EspamaGS_2._0.Controllers {
             }
             return RedirectToAction(nameof(GerirPlataformas)); ;
         }
+        [Authorize(Roles = "Funcionario")]
 
         public IActionResult EditarDesenvolvedora(int? id) {
             var des = _context.Desenvolvedoras.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (des == null) return RedirectToAction(nameof(GerirDesenvolvedoras));
             return View(des);
         }
+        [Authorize(Roles = "Funcionario")]
 
         [HttpPost]
         public async Task<IActionResult> EditarDesenvolvedora(int? id, Desenvolvedora des) {
@@ -353,6 +375,7 @@ namespace EspamaGS_2._0.Controllers {
         #endregion
 
         #region Apagar
+        [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> ApagarFuncionario(string? id) {
             var user = _userManager.Users.FirstOrDefault(c => c.UserName == id);
@@ -365,6 +388,8 @@ namespace EspamaGS_2._0.Controllers {
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(GerirFuncionarios));
         }
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> ApagarAdministrador(string? id) {
             var user = _userManager.Users.FirstOrDefault(c => c.UserName == id);
             if (user == null) { return RedirectToAction(nameof(GerirFuncionarios)); }
@@ -380,6 +405,8 @@ namespace EspamaGS_2._0.Controllers {
 
             return RedirectToAction(nameof(GerirFuncionarios));
         }
+        [Authorize(Roles = "Funcionario")]
+
         public async Task<IActionResult> ApagarJogo(int? id) {
             string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/");
             var jogo = _context.Jogos.FirstOrDefault(c => c.Id == id);
@@ -394,6 +421,8 @@ namespace EspamaGS_2._0.Controllers {
 
             return RedirectToAction(nameof(GerirJogos));
         }
+        [Authorize(Roles = "Funcionario")]
+
         public async Task<IActionResult> ApagarCategoria(int? id) {
             var cat = _context.Categoria.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (cat == null) return RedirectToAction(nameof(GerirCategorias));
@@ -402,6 +431,8 @@ namespace EspamaGS_2._0.Controllers {
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(GerirCategorias));
         }
+        [Authorize(Roles = "Funcionario")]
+
         public async Task<IActionResult> ApagarPlataforma(int? id) {
             var plat = _context.Plataformas.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (plat == null) return RedirectToAction(nameof(GerirPlataformas));
@@ -410,6 +441,8 @@ namespace EspamaGS_2._0.Controllers {
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(GerirPlataformas));
         }
+        [Authorize(Roles = "Funcionario")]
+
         public async Task<IActionResult> ApagarDesenvolvedora(int? id) {
             var des = _context.Desenvolvedoras.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (des == null) return RedirectToAction(nameof(GerirDesenvolvedoras));

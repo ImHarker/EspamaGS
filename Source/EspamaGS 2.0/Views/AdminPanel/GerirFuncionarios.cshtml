@@ -6,11 +6,11 @@
 }
 
 <div class="text-white bg-dark bg-opacity-75 p-4 favoritos-container">
+		<h2 class="pb-2">Gerir Funcionários</h2>
 	@if (!((IEnumerable<Funcionario>)ViewBag.Funcionarios).Any() && !((IEnumerable<Administrador>)ViewBag.Admin).Any()) {
-		<h2>Não tem nenhum funcionário para gerir!</h2>
+		<h3>Não tem nenhum funcionário para gerir!</h3>
 	}
 	else {
-		<h2 class="pb-2">Gerir Funcionários</h2>
 		<h4 class="pb-2">Funcionários</h4>
 		@if (!((IEnumerable<Funcionario>)ViewBag.Funcionarios).Any()) {
 			<label class="pb-2 fs-5">Não tem nenhum funcionário para gerir!</label>

@@ -18,11 +18,12 @@ $(".searchbar").on("keydown", function (e) {
         setCookie("blockinfinitescroll", 1, 1);
         CloseSearch();
         $('.jogos-container').empty();
-        let mydata = {nome: $('#searchbar').val(), cat: $('#Categorias').val(), plat: $('#Plataforma').val(), ordenar: $('#ordenar').prop('selectedIndex'), ordem: $('#ordem').prop('selectedIndex') }
+        let mydata = { nome: $('#searchbar').val(), cat: $('#Categorias').val(), plat: $('#Plataforma').val(), ordenar: $('#ordenar').prop('selectedIndex'), ordem: $('#ordem').prop('selectedIndex') }
         $.ajax({ url: '/Home/Pesquisa', data: mydata }).done(function (data) {
             if (data.length == 0) {
-                $('.jogos-container').append(`<h3 class="text-white p-4 pt-0 pb-2">Não foi encontrado nenhum jogo que satisfaz os seus critérios!</h3>`);}
-            data.forEach( jogo => 
+                $('.jogos-container').append(`<h3 class="text-white p-4 pt-0 pb-2">Não foi encontrado nenhum jogo que satisfaz os seus critérios!</h3>`);
+            }
+            data.forEach(jogo =>
                 $('.jogos-container').append(`
                     <!--TEMPLATE-->
                 <div class="gamecard col-sm-4 col-md-2 m-3 p-3 bg-dark text-white">
@@ -48,7 +49,7 @@ $(".searchbar").on("keydown", function (e) {
                 `)
             );
         });
-    
+
     }
 });
 
@@ -116,3 +117,13 @@ function getCookie(cname) {
     }
     return "";
 }
+
+function MailNotifyChanged(e) {
+    let mydata = { id: 0 }
+
+    $.ajax({ type: "POST", url: '/Home/Settings', data: mydata }).done(function (data) {
+        setTimeout(() => { window.location.reload(); }, 250);
+    });
+
+}
+
