@@ -53,7 +53,10 @@ namespace EspamaGS_2._0.Controllers {
         public async Task<IActionResult> AddFuncionarios(string? id, int? tipo, string? tlf) {
             if (id == null) return RedirectToAction(nameof(AddFuncionarios));
             if (tipo is not (1 or 2)) return RedirectToAction(nameof(AddFuncionarios));
-            if (tipo == 1 && tlf == null) return RedirectToAction(nameof(AddFuncionarios));
+            if (tipo == 1 && tlf == null) {
+                TempData["msgerr"] = "O campo 'Telefone' tem de estar preenchido!";
+                return RedirectToAction(nameof(AddFuncionarios));
+            }
 
             var user = _userManager.Users.FirstOrDefault(c => c.UserName == id);
             if (user == null) return RedirectToAction(nameof(AddFuncionarios));
@@ -97,13 +100,13 @@ namespace EspamaGS_2._0.Controllers {
             return View(users);
         }
 
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         public IActionResult AddCategoria() {
             return View();
         }
 
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddCategoria(Categoria c) {
             if (_context.Categoria.Any(x => x.Nome == c.Nome)) return RedirectToAction(nameof(AddCategoria));
@@ -114,12 +117,12 @@ namespace EspamaGS_2._0.Controllers {
             return RedirectToAction(nameof(AddCategoria));
         }
 
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddPlataforma() {
             return View();
         }
 
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddPlataforma(Plataforma p) {
             if (_context.Plataformas.Any(x => x.Nome == p.Nome)) return RedirectToAction(nameof(AddPlataforma));
@@ -131,12 +134,12 @@ namespace EspamaGS_2._0.Controllers {
             return RedirectToAction(nameof(AddPlataforma));
         }
 
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddDesenvolvedora() {
             return View();
         }
 
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddDesenvolvedora(Desenvolvedora d) {
             if (_context.Desenvolvedoras.Any(x => x.Nome == d.Nome)) return RedirectToAction(nameof(AddDesenvolvedora));
@@ -161,14 +164,46 @@ namespace EspamaGS_2._0.Controllers {
         [Authorize(Roles = "Funcionario")]
         [HttpPost]
         public async Task<IActionResult> AddJogo(Jogo jogo, IFormFile foto) {
-            if (foto == null) return RedirectToAction(nameof(AddJogo));
-            if (jogo.Nome == null) return RedirectToAction(nameof(AddJogo));
-            if (jogo.Descricao == null) return RedirectToAction(nameof(AddJogo));
-            if (jogo.Preco < 0) return RedirectToAction(nameof(AddJogo));
-            if (jogo.DataLancamento == null) return RedirectToAction(nameof(AddJogo));
-            if (jogo.IdCategoria == 0) return RedirectToAction(nameof(AddJogo));
-            if (jogo.IdPlataforma == 0) return RedirectToAction(nameof(AddJogo));
-            if (jogo.IdDesenvolvedora == 0) return RedirectToAction(nameof(AddJogo));
+            if (foto == null) {
+                TempData["msgerr"] = "O campo 'Foto' tem de estar preenchido!";
+
+                return RedirectToAction(nameof(AddJogo));
+            }
+
+            if (String.IsNullOrWhiteSpace(jogo.Nome)) {
+                TempData["msgerr"] = "O campo 'Nome' tem de estar preenchido!";
+                return RedirectToAction(nameof(AddJogo));
+            }
+
+            if (String.IsNullOrWhiteSpace(jogo.Descricao)) {
+                TempData["msgerr"] = "O campo 'Descrição' tem de estar preenchido!";
+                return RedirectToAction(nameof(AddJogo));
+            }
+
+            if (jogo.Preco < 0) {
+                TempData["msgerr"] = "O campo 'Preço' tem de estar preenchido e ser um valor positivo!";
+                return RedirectToAction(nameof(AddJogo));
+            }
+
+            if (jogo.DataLancamento == null) {
+                TempData["msgerr"] = "O campo 'Data de Lançamento' tem de estar preenchido!";
+                return RedirectToAction(nameof(AddJogo));
+            }
+
+            if (jogo.IdCategoria == 0) {
+                TempData["msgerr"] = "O campo 'Categoria' tem de estar preenchido!";
+                return RedirectToAction(nameof(AddJogo));
+            }
+
+            if (jogo.IdPlataforma == 0) {
+                TempData["msgerr"] = "O campo 'Plataforma' tem de estar preenchido!";
+                return RedirectToAction(nameof(AddJogo));
+            }
+
+            if (jogo.IdDesenvolvedora == 0) {
+                TempData["msgerr"] = "O campo 'Desenvolvedora' tem de estar preenchido!";
+                return RedirectToAction(nameof(AddJogo));
+            }
             jogo.Foto = "";
             jogo.IdFuncionario = User.Identity!.Name!;
             string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/");
@@ -205,25 +240,29 @@ namespace EspamaGS_2._0.Controllers {
             ViewData["Admin"] = _context.Administradors.Where(c => c.IdAdmin == User.Identity!.Name).ToList();
             return View();
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Funcionario, Admin")]
 
         public IActionResult GerirJogos() {
 
+            if (User.IsInRole("Admin")) {
+                return View(_context.Jogos.Include(c => c.IdPlataformaNavigation).ToList());
+            }
+
             return View(_context.Jogos.Include(c => c.IdPlataformaNavigation).Where(c => c.IdFuncionario == User.Identity!.Name).ToList());
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         public IActionResult GerirCategorias() {
 
             return View(_context.Categoria.ToList());
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         public IActionResult GerirPlataformas() {
 
             return View(_context.Plataformas.ToList());
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         public IActionResult GerirDesenvolvedoras() {
 
@@ -245,13 +284,17 @@ namespace EspamaGS_2._0.Controllers {
         public async Task<IActionResult> EditarFuncionario(string? id, Funcionario fun) {
             var funupdate = _context.Funcionarios.FirstOrDefault(c => c.IdUtilizador == id);
             if (funupdate == null) return RedirectToAction(nameof(GerirFuncionarios));
-            if (String.IsNullOrEmpty(fun.Telefone)) return View(funupdate);
+            if (String.IsNullOrEmpty(fun.Telefone)) {
+                TempData["msgerr"] = "O campo 'Telefone' tem de estar preenchido!";
+                return View(funupdate);
+            }
             funupdate.Telefone = fun.Telefone;
             _context.Funcionarios.Update(funupdate);
             await _context.SaveChangesAsync();
+            TempData["msg"] = $"O Funcionário '{funupdate.IdUtilizador}' foi editado com sucesso!";
             return RedirectToAction(nameof(GerirFuncionarios));
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Funcionario, Admin")]
 
         public IActionResult EditarJogo(int? id) {
             var jogo = _context.Jogos.FirstOrDefault(c => c.Id == id);
@@ -261,19 +304,47 @@ namespace EspamaGS_2._0.Controllers {
             ViewData["Desenvolvedoras"] = _context.Desenvolvedoras.ToList();
             return View(jogo);
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Funcionario, Admin")]
 
         [HttpPost]
         public async Task<IActionResult> EditarJogo(int? id, Jogo jogo, IFormFile? foto) {
             var jogoupdate = _context.Jogos.FirstOrDefault(c => c.Id == id);
             if (jogoupdate == null) { return RedirectToAction(nameof(GerirJogos)); }
-            if (String.IsNullOrEmpty(jogo.Nome)) return RedirectToAction(nameof(EditarJogo), id);
-            if (String.IsNullOrEmpty(jogo.Descricao)) return RedirectToAction(nameof(EditarJogo), id);
-            if (jogo.Preco < 0) return RedirectToAction(nameof(EditarJogo), id);
-            if (jogo.DataLancamento == null) return RedirectToAction(nameof(EditarJogo), id);
-            if (jogo.IdCategoria == 0) return RedirectToAction(nameof(EditarJogo), id);
-            if (jogo.IdPlataforma == 0) return RedirectToAction(nameof(EditarJogo), id);
-            if (jogo.IdDesenvolvedora == 0) return RedirectToAction(nameof(EditarJogo), id);
+
+            if (String.IsNullOrWhiteSpace(jogo.Nome)) {
+                TempData["msgerr"] = "O campo 'Nome' tem de estar preenchido!";
+                return RedirectToAction(nameof(EditarJogo), id);
+            }
+
+            if (String.IsNullOrWhiteSpace(jogo.Descricao)) {
+                TempData["msgerr"] = "O campo 'Descrição' tem de estar preenchido!";
+                return RedirectToAction(nameof(EditarJogo), id);
+            }
+
+            if (jogo.Preco < 0) {
+                TempData["msgerr"] = "O campo 'Preço' tem de estar preenchido e ser um valor positivo!";
+                return RedirectToAction(nameof(EditarJogo), id);
+            }
+
+            if (jogo.DataLancamento == null) {
+                TempData["msgerr"] = "O campo 'Data de Lançamento' tem de estar preenchido!";
+                return RedirectToAction(nameof(EditarJogo), id);
+            }
+
+            if (jogo.IdCategoria == 0) {
+                TempData["msgerr"] = "O campo 'Categoria' tem de estar preenchido!";
+                return RedirectToAction(nameof(EditarJogo), id);
+            }
+
+            if (jogo.IdPlataforma == 0) {
+                TempData["msgerr"] = "O campo 'Plataforma' tem de estar preenchido!";
+                return RedirectToAction(nameof(EditarJogo), id);
+            }
+
+            if (jogo.IdDesenvolvedora == 0) {
+                TempData["msgerr"] = "O campo 'Desenvolvedora' tem de estar preenchido!";
+                return RedirectToAction(nameof(EditarJogo), id);
+            }
             jogoupdate.Nome = jogo.Nome;
             jogoupdate.Descricao = jogo.Descricao;
             jogoupdate.Preco = jogo.Preco;
@@ -296,16 +367,17 @@ namespace EspamaGS_2._0.Controllers {
 
             _context.Jogos.Update(jogoupdate);
             await _context.SaveChangesAsync();
+            TempData["msg"] = $"O Jogo '{jogoupdate.Nome} foi editado com sucesso!";
             return RedirectToAction(nameof(GerirJogos));
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         public IActionResult EditarCategoria(int? id) {
             var cat = _context.Categoria.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (cat == null) return RedirectToAction(nameof(GerirCategorias));
             return View(cat);
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public async Task<IActionResult> EditarCategoria(int? id, Categoria cat) {
@@ -320,17 +392,18 @@ namespace EspamaGS_2._0.Controllers {
                     throw;
                 }
             }
+            TempData["msg"] = $"A Categoria '{cat.Nome}' foi editada com sucesso!";
             return RedirectToAction(nameof(GerirCategorias)); ;
         }
 
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         public IActionResult EditarPlataforma(int? id) {
             var plat = _context.Plataformas.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (plat == null) return RedirectToAction(nameof(GerirPlataformas));
             return View(plat);
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public async Task<IActionResult> EditarPlataforma(int? id, Plataforma plat) {
@@ -345,16 +418,17 @@ namespace EspamaGS_2._0.Controllers {
                     throw;
                 }
             }
+            TempData["msg"] = $"A Plataforma '{plat.Nome}' foi editada com sucesso!";
             return RedirectToAction(nameof(GerirPlataformas)); ;
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         public IActionResult EditarDesenvolvedora(int? id) {
             var des = _context.Desenvolvedoras.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (des == null) return RedirectToAction(nameof(GerirDesenvolvedoras));
             return View(des);
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public async Task<IActionResult> EditarDesenvolvedora(int? id, Desenvolvedora des) {
@@ -369,6 +443,7 @@ namespace EspamaGS_2._0.Controllers {
                     throw;
                 }
             }
+            TempData["msg"] = $"A Desenvolvedora '{des.Nome}' foi editada com sucesso!";
             return RedirectToAction(nameof(GerirDesenvolvedoras)); ;
         }
 
@@ -386,6 +461,7 @@ namespace EspamaGS_2._0.Controllers {
             _context.Funcionarios.Remove(func);
             await _userManager.RemoveFromRoleAsync(user, "Funcionario");
             await _context.SaveChangesAsync();
+            TempData["msg"] = $"O cargo do Funcionário '{func.IdUtilizador}' foi removido com sucesso!";
             return RedirectToAction(nameof(GerirFuncionarios));
         }
         [Authorize(Roles = "Admin")]
@@ -403,9 +479,10 @@ namespace EspamaGS_2._0.Controllers {
             await _userManager.RemoveFromRoleAsync(user, "Admin");
             await _context.SaveChangesAsync();
 
+            TempData["msg"] = $"O cargo do Administrador '{admin.IdUtilizador}' foi removido com sucesso!";
             return RedirectToAction(nameof(GerirFuncionarios));
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Funcionario, Admin")]
 
         public async Task<IActionResult> ApagarJogo(int? id) {
             string dest = Path.Combine(_he.ContentRootPath + "/wwwroot/img/Jogos/");
@@ -419,36 +496,49 @@ namespace EspamaGS_2._0.Controllers {
                 System.IO.File.Delete(dest);
             }
 
+            TempData["msg"] = $"O Jogo '{jogo.Nome}' foi apagado com sucesso!";
             return RedirectToAction(nameof(GerirJogos));
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> ApagarCategoria(int? id) {
             var cat = _context.Categoria.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (cat == null) return RedirectToAction(nameof(GerirCategorias));
-            if (cat.Jogos.Count != 0) return RedirectToAction(nameof(GerirCategorias));
+            if (cat.Jogos.Count != 0) {
+                TempData["msgerr"] = "A Categoria tem de estar vazia para ser apagada!";
+                return RedirectToAction(nameof(GerirCategorias));
+            }
             _context.Categoria.Remove(cat);
             await _context.SaveChangesAsync();
+            TempData["msg"] = $"A Categoria '{cat.Nome}' foi apagada com sucesso!";
             return RedirectToAction(nameof(GerirCategorias));
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> ApagarPlataforma(int? id) {
             var plat = _context.Plataformas.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (plat == null) return RedirectToAction(nameof(GerirPlataformas));
-            if (plat.Jogos.Count != 0) return RedirectToAction(nameof(GerirPlataformas));
+            if (plat.Jogos.Count != 0) {
+                TempData["msgerr"] = "A Plataforma tem de estar vazia para ser apagada!";
+                return RedirectToAction(nameof(GerirPlataformas));
+            }
             _context.Plataformas.Remove(plat);
             await _context.SaveChangesAsync();
+            TempData["msg"] = $"A Plataforma '{plat.Nome}' foi apagada com sucesso!";
             return RedirectToAction(nameof(GerirPlataformas));
         }
-        [Authorize(Roles = "Funcionario")]
+        [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> ApagarDesenvolvedora(int? id) {
             var des = _context.Desenvolvedoras.Include(c => c.Jogos).FirstOrDefault(c => c.Id == id);
             if (des == null) return RedirectToAction(nameof(GerirDesenvolvedoras));
-            if (des.Jogos.Count != 0) return RedirectToAction(nameof(GerirDesenvolvedoras));
+            if (des.Jogos.Count != 0) {
+                TempData["msgerr"] = "A Desenvolvedora tem de estar vazia para ser apagada!";
+                return RedirectToAction(nameof(GerirDesenvolvedoras));
+            }
             _context.Desenvolvedoras.Remove(des);
             await _context.SaveChangesAsync();
+            TempData["msg"] = $"A Desenvolvedora '{des.Nome}' foi apagada com sucesso!";
             return RedirectToAction(nameof(GerirDesenvolvedoras));
         }
 

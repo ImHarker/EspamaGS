@@ -1,7 +1,7 @@
 ﻿$(window).on("load",
     function (e) {
         setCookie("blockinfinitescroll", 0, 1);
-        setCookie("page", 0, 1);
+        setCookie("page", 1, 1);
     });
 
 $(window).scroll(function () {

@@ -5,14 +5,6 @@
 	decimal total = 0;
 }
 
-@if (TempData["msg"] != null) {
-	<div class="alert alert-success alert-dismissible fade show">
-		@TempData["msg"]
-		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-	</div>
-}
-
-
 <div class="carrinho-container align-content-center mb-5 p-5 bg-dark bg-opacity-75">
 <h1 class="text-white mt-2 mb-5">Carrinho de Compras</h1>
 	@if (Model.Any()) {

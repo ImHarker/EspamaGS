@@ -1,19 +1,12 @@
 ﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
 @{
-    ViewData["Title"] = "AddFuncionarios";
+    ViewData["Title"] = "Adicionar Funcionário";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 @section AddToHead{
 	<link href="@Url.Content("~/css/admin.css")" rel="stylesheet" type="text/css" />
 }
-@if (TempData["msg"] != null) {
-	<div class="alert alert-success alert-dismissible fade show">
-		@TempData["msg"]
-		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-	</div>
-}
-
 <div class="add-card-container pb-3 mb-5">
 	<form onsubmit="return onSubmitNewFunc(this);" asp-action="AddFuncionarios" method="post">
 		<div class="login-card m-5">			

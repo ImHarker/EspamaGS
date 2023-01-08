@@ -62,16 +62,16 @@
 							<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
 								@if (User.IsInRole("Admin")) {
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddFuncionarios">Funcionário</a></li>
+										<li class="dropdown-divider"></li>
+									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddCategoria">Categoria</a></li>
+									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddPlataforma">Plataforma</a></li>
+									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddDesenvolvedora">Desenvolvedora</a></li>
 								}
 									@if (User.IsInRole("Admin") && User.IsInRole("Funcionario")) {
 										<li class="dropdown-divider"></li>
 									}
 								@if (User.IsInRole("Funcionario")) {
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddJogo">Jogo</a></li>
-									<li class="dropdown-divider"></li>
-									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddCategoria">Categoria</a></li>
-									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddPlataforma">Plataforma</a></li>
-									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="AddDesenvolvedora">Desenvolvedora</a></li>
 								}
 								                                                                                                                      </ul>
 						</div>
@@ -85,18 +85,16 @@
 								<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
 									@if (User.IsInRole("Admin")) {
 										<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="GerirFuncionarios">Funcionários</a></li>
-									}
-									@if (User.IsInRole("Admin") && User.IsInRole("Funcionario")) {
 										<li class="dropdown-divider"></li>
-									}
-								@if (User.IsInRole("Funcionario")) {
-									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="GerirJogos">Jogos</a></li>
-									<li class="dropdown-divider"></li>
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="GerirCategorias">Categorias</a></li>
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="GerirPlataformas">Plataformas</a></li>
 									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="GerirDesenvolvedoras">Desenvolvedoras</a></li>
+										<li class="dropdown-divider"></li>
 									}
-									                                                                                                                          </ul>
+								@if (User.IsInRole("Funcionario") ||  (User.IsInRole("Admin"))) {
+									<li><a class="dropdown-item" asp-area="" asp-controller="AdminPanel" asp-action="GerirJogos">Jogos</a></li>
+									}
+									</ul>
 							</div>
 						</li>
 				</ul>
@@ -133,6 +131,18 @@
 </header>
 <div class="container">
 	<main role="main" class="pb-3">
+		@if (TempData["msg"] != null) {
+			<div class="alert alert-success alert-dismissible fade show">
+				@TempData["msg"]
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		}
+		@if (TempData["msgerr"] != null) {
+			<div class="alert alert-danger alert-dismissible fade show">
+				@TempData["msgerr"]
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		}
 		@RenderBody()
 	</main>
 </div>
