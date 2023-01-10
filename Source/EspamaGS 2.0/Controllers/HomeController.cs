@@ -81,6 +81,7 @@ namespace EspamaGS_2._0.Controllers {
             };
             _context.Preferencia.Add(pref);
             await _context.SaveChangesAsync();
+            TempData["msg"] = "Adicionado às categorias preferidas com sucesso!";
             return RedirectToAction(nameof(Favoritos));
         }
 
@@ -129,19 +130,18 @@ namespace EspamaGS_2._0.Controllers {
             });
             await _context.SaveChangesAsync();
             var items = new List<Compra>();
-            var cartitems = _context.Carts.Where(c => c.IdCliente == User.Identity!.Name).Include(c => c.IdJogoNavigation).ToList();
-            if (!cartitems.Any()) return RedirectToAction(nameof(Carrinho));
-            foreach (var item in cartitems) {
-                var compra = new Compra {
+            var cartitem = _context.Carts.Include(c => c.IdJogoNavigation).FirstOrDefault(c => c.IdCliente == User.Identity!.Name && c.IdJogo == id);
+            if (cartitem == null) return RedirectToAction(nameof(Carrinho));
+            var compra = new Compra {
                     DataCompra = DateTime.Now,
-                    Preco = item.IdJogoNavigation.Preco,
-                    IdCliente = item.IdCliente,
-                    IdJogo = item.IdJogoNavigation.Id,
+                    Preco = cartitem.IdJogoNavigation.Preco,
+                    IdCliente = cartitem.IdCliente,
+                    IdJogo = cartitem.IdJogoNavigation.Id,
                     Key = GameKeyGenerator.GenerateKey()
                 };
                 items.Add(compra);
-                _context.Carts.Remove(item);
-            }
+                _context.Carts.Remove(cartitem);
+            
             _context.Compras.AddRange(items);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Compras));
