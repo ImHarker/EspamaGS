@@ -24,6 +24,7 @@ namespace EspamaGS_2._0.Data {
         public virtual DbSet<Plataforma> Plataformas { get; set; } = null!;
         public virtual DbSet<Preferencia> Preferencia { get; set; } = null!;
         public virtual DbSet<UserSettings> UserSettings { get; set; } = null!;
+        public virtual DbSet<Review> Reviews { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             if (!optionsBuilder.IsConfigured) {

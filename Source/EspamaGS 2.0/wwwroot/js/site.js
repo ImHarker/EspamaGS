@@ -96,6 +96,29 @@ $('#TipoFunc').on('change', function () {
 });
 //#endregion
 
+//#region Star rating
+
+$(".feather-star").mouseover(function (e) {
+    $(".feather-star").attr("fill", "none");
+    $(this).attr("fill", "#FDCC0D50");
+    $(this).prevAll(".feather-star").attr("fill", "#FDCC0D50");
+});
+
+$(".feather-star").click(function (e) {
+    $(".feather-star").attr("fill", "none");
+    $(this).attr("fill", "#FDCC0D");
+    $(this).prevAll(".feather-star").attr("fill", "#FDCC0D");
+    $(".feather-star").unbind('mouseover');
+    var rating = $(this).attr("data-value");
+
+    $("#rating").val(rating);
+
+    console.log($("#rating").val());
+
+});
+//#endregion
+
+
 function setCookie(cname, cvalue, exdays) {
     const d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
