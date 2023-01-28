@@ -1,11 +1,12 @@
 ﻿@model Jogo
 @{
-    ViewData["Title"] = "Jogo";
+    ViewData["Title"] = Model.Nome;
+	var empty = !((IEnumerable<Review>?)ViewData["reviews"])?.Any();
 }
 
 <div class="jogo-container text-white bg-dark p-4 bg-opacity-75"> 
 	<h1 class="text-white mb-4">@Model.Nome</h1>
-	<div class="d-flex">
+	<div class="d-flex pb-5">
 		<div>
 			<img class="foto-jogo" src="/img/Jogos/@Model.Foto"/>
 		</div>
@@ -14,11 +15,15 @@
 			<p class="desc-jogo mt-2">@Model.Descricao</p>
 			<h5 class="mt-3">Data de Lançamento</h5>
 			<p class="data-jogo">@Model.DataLancamento.ToString()!.Split(" ").First()</p>
+				@if (empty == false) {
 			<h5 class="mt-3">Rating</h5>
 			<div class="d-flex rating-jogo mb-3 align-items-center">
-				<p class="p-2 pt-0 pb-0 mb-0">0 de 5</p>
+					<p class="p-2 pt-0 pb-0 mb-0">@(((IEnumerable<Review>?)ViewData["reviews"])?.Average(z => z.Rating)) de 5</p>
 				<svg width="24" height="24" viewBox="0 0 24 24" fill="#FDCC0D" stroke="#FDCC0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-stars"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+					<p class="p-2 pt-0 pb-0 mb-0">(@(((IEnumerable<Review>?)ViewData["reviews"])?.Count()))</p>
+
 			</div>
+				}
 			<div>
 				<span class="badge rounded-pill bg-danger m-1">@Model.IdCategoriaNavigation.Nome</span>
 				<span class="badge rounded-pill bg-primary m-1">@Model.IdPlataformaNavigation.Nome</span>
@@ -36,7 +41,9 @@
 		</div>
 	</div>
 	
-	@await Html.PartialAsync("_Reviews")
-
+	@await Html.PartialAsync("_ReviewsFeed", ViewData["reviews"])
+	@if ((bool)ViewData["comprado"]!) {
+		@await Html.PartialAsync("_Reviews", ViewData["userReview"])
+	}
 </div>
 

@@ -20,6 +20,41 @@ namespace EspamaGS_2._0.Controllers {
             _signInManager = signInManager;
         }
 
+        public async Task<IActionResult> ApagarReview(int? id) {
+            var review = _context.Reviews.FirstOrDefault(c => c.Id == id);
+            if (review == null) return RedirectToAction(nameof(Index));
+            if(!User.IsInRole("Admin")) return RedirectToAction(nameof(Jogo), new { id = review.IdJogo });
+            _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
+            TempData["msg"] = $"A Crítica de '{review.IdCliente}' foi apagada com sucesso!";
+            return RedirectToAction(nameof(Jogo), new { id = review.IdJogo });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddReview(Review review) {
+            if(! _context.Compras.Any(x => x.IdJogo == review.IdJogo && x.IdCliente == User.Identity!.Name)) return RedirectToAction(nameof(Jogo), new { id = review.IdJogo });
+            if (String.IsNullOrWhiteSpace(review.ReviewMessage)) {
+                TempData["msgerr"] = "A sua crítica deve estar preenchida!";
+                return RedirectToAction(nameof(Jogo), new { id = review.IdJogo });
+            }
+            if (review.Rating <= 0) {
+                TempData["msgerr"] = "A sua crítica deve conter um rating!";
+                return RedirectToAction(nameof(Jogo), new { id = review.IdJogo });
+            }
+            var reviewupdate = _context.Reviews.FirstOrDefault(x => x.IdJogo == review.IdJogo && x.IdCliente == User.Identity!.Name);
+            if (reviewupdate != null) {
+                reviewupdate.ReviewMessage = review.ReviewMessage;
+                reviewupdate.Rating = review.Rating;
+                reviewupdate.DataReview = review.DataReview;
+                _context.Reviews.Update(reviewupdate);
+            } else {
+                review.DataReview = DateTime.Now;
+                _context.Reviews.Add(review);
+            }
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Jogo), new { id = review.IdJogo });
+        }
 
         [AllowAnonymous]
         public IActionResult Scroll(int? page) {
@@ -202,9 +237,12 @@ namespace EspamaGS_2._0.Controllers {
             if (id == null) return RedirectToAction(nameof(Index));
             Jogo? jogo;
             if ((jogo = _context.Jogos.Include(c => c.IdCategoriaNavigation).Include(c => c.IdDesenvolvedoraNavigation).Include(c => c.IdPlataformaNavigation).FirstOrDefault(x => x.Id == id)) == null) return RedirectToAction(nameof(Index));
+            ViewData["reviews"] = _context.Reviews.Where(x => x.IdJogo == id).ToList();
+            ViewData["comprado"] = _context.Compras.Any(x => x.IdJogo == id && x.IdCliente == User.Identity!.Name);
+            var review = _context.Reviews.FirstOrDefault(x => x.IdJogo == id && x.IdCliente == User.Identity!.Name);
+            ViewData["userReview"] = review ?? new Review { IdCliente = User.Identity!.Name!, IdJogo = (int)id };
             return View(jogo);
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error() {

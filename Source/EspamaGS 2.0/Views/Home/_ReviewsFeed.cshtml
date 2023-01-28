@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Review>
+
+@if (Model.Any()) {
+	<div class="reviewbox">
+		<p class="p-3 fs-4 pb-1 pt-1 mb-0">Críticas</p>
+
+		@foreach (var item in Model) {
+			<div>
+				<hr class="mt-0 mb-0"/>
+				<div class="review-rating d-flex">
+					<p class="p-3 fs-5 pb-1 mb-0">@item.IdCliente</p>
+					<div class="d-flex p-3 pb-1 mb-0 align-items-center">
+						@for (var i = 0; i < item.Rating; i++) {
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="#FDCC0D" stroke="#FDCC0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-stars"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+						}
+						@for (var i = 0; i < 5 - item.Rating; i++) {
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FDCC0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-stars"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+						}
+					</div>
+					<p class="date-review pt-3 pb-1 mb-0"><i>@item.DataReview</i></p>
+					@if (item.IdCliente == User.Identity!.Name || User.IsInRole("Admin") || User.IsInRole("Funcionario")) {
+						<a class="text-decoration-none p-3 pb-1 mb-0 apagar-jogo" asp-action="ApagarReview" asp-route-id="@item.Id" onclick="return confirm('Apagar a crítica de \'@item.IdCliente\'?')">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+						</a>
+					}
+				</div>
+				<p class="p-4 pt-1 mb-0">@item.ReviewMessage</p>
+			</div>
+		}
+	</div>
+}

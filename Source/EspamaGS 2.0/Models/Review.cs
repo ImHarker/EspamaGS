@@ -8,6 +8,8 @@ namespace EspamaGS_2._0.Models {
         public int Id { get; set; }
         [StringLength(1024)]
         public string ReviewMessage { get; set; }
+
+        public DateTime DataReview { get; set; }
         public int Rating { get; set; }
         public int IdJogo { get; set; }
         [StringLength(50)]

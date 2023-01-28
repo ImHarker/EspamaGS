@@ -359,3 +359,8 @@ img[src="https://localhost:7251/favicon.ico"] {
     border: none;
     background: none;
 }
+
+.date-review {
+    margin: auto;
+    margin-right: 1rem !important;
+}

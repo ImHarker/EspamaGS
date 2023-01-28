@@ -1,23 +1,31 @@
-﻿<div class="reviewbox">
-	<p class="p-2 fs-4 pb-1 mb-0">Escrever uma Crítica</p>
+﻿@model Review
+
+<form asp-action="AddReview" method="post">
+	<div class="reviewbox">
+	<p class="p-3 fs-4 pb-1 mb-0">Escrever uma Crítica</p>
 	<hr class="mt-0 mb-0" />
 	<div class="review-rating">
-		<p class="p-2 fs-5 pb-1 mb-0">Rating</p>
-		<div class="d-flex p-2 fs-5 pb-1 mb-0 pt-0">
-			<svg data-value="1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FDCC0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-			<svg data-value="2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FDCC0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-			<svg data-value="3" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FDCC0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-			<svg data-value="4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FDCC0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-			<svg data-value="5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FDCC0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-			<input id="rating" hidden="" />
+		<p class="p-4 fs-5 pb-1 pt-2 mb-0">Rating</p>
+		<div class="d-flex p-4 fs-5 pb-1 mb-0 pt-0">
+			@for (var i = 0; i < Model.Rating; i++) {
+				<svg data-value="@((int)i+1)" width="24" height="24" viewBox="0 0 24 24" fill="#FDCC0D" stroke="#FDCC0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+			}
+				@for (var i = Model.Rating; i < 5; i++) {
+					<svg data-value="@((int)i+1)" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FDCC0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+			}
+			<input asp-for="Rating" id="rating" hidden=""/>
+			<input asp-for="IdJogo"  hidden=""/>
+			<input asp-for="IdCliente" hidden=""/>
+			<input asp-for="DataReview" hidden=""/>
 		</div>
 		<hr class="mt-1 mb-0" />
-		<p class="p-2 fs-5 pb-1 mb-0">Crítica</p>
+		<p class="p-4 fs-5 pt-2 pb-1 mb-0">Crítica</p>
 		<div id="review-text-container" class="text-white">
-			<textarea id="review-text" class="text-white" rows="5" type="text" placeholder="Escreva a sua crítica aqui..."></textarea>
+			<textarea asp-for="ReviewMessage" id="review-text" class="text-white" rows="5" type="text" placeholder="Escreva a sua crítica aqui..."></textarea>
 		</div>
-		<div class="m-4 p-2 fs-5 pb-1 mt-1 float-end">
+		<div class="m-4 p-4 fs-5 pt-1 pb-1 mb-3 mt-1 float-end">
 			<button class="btn btn-primary" type="submit">Submeter</button>
 		</div>
 	</div>
 </div>
+</form>

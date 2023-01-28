@@ -113,6 +113,7 @@ $(".feather-star").click(function (e) {
 
     $("#rating").val(rating);
 
+    console.log(rating);
     console.log($("#rating").val());
 
 });
